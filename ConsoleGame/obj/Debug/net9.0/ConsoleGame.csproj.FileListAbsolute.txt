@@ -1,0 +1,15 @@
+E:\Fork\Homework\ConsoleGame\bin\Debug\net9.0\ConsoleGame.exe
+E:\Fork\Homework\ConsoleGame\bin\Debug\net9.0\ConsoleGame.deps.json
+E:\Fork\Homework\ConsoleGame\bin\Debug\net9.0\ConsoleGame.runtimeconfig.json
+E:\Fork\Homework\ConsoleGame\bin\Debug\net9.0\ConsoleGame.dll
+E:\Fork\Homework\ConsoleGame\bin\Debug\net9.0\ConsoleGame.pdb
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.GeneratedMSBuildEditorConfig.editorconfig
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.AssemblyInfoInputs.cache
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.AssemblyInfo.cs
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.csproj.CoreCompileInputs.cache
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.sourcelink.json
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.dll
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\refint\ConsoleGame.dll
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.pdb
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ConsoleGame.genruntimeconfig.cache
+E:\Fork\Homework\ConsoleGame\obj\Debug\net9.0\ref\ConsoleGame.dll
