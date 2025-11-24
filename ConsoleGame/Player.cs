@@ -12,6 +12,9 @@ namespace ConsoleApp
         private int _potionDuration;
         private GameDirector _gameDirector;
         
+        public Weapon? ActiveWeapon => _activeWeapon;
+        public Potion? ActivePotion => _activePotion;
+        
 
         public Player(string name, int health, int baseDamage)
         {

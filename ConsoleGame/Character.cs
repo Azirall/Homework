@@ -5,6 +5,7 @@ namespace ConsoleApp
         public string Name { get; protected set; }
         protected int health;
         protected int baseDamage;
+        public int Health => health;
 
         
         public virtual int Attack()

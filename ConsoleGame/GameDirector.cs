@@ -26,7 +26,7 @@ public class GameDirector
         SubscribeInEvent();
         _consoleUI.ShowMenu();
         
-        while (true)
+        while (_gameRunning)
         {
             GameLoop();
         }
@@ -38,6 +38,9 @@ public class GameDirector
         
         switch (input)
         {
+            case 0:
+                _gameRunning = false;
+                break;
             case 1: Attack();
                 break;
             case 2: UsePotion();
@@ -46,10 +49,12 @@ public class GameDirector
                 break;
             case 4: ChangePotion();
                 break;
+            case 5: ShowStats();
+                break;
         }
         _consoleUI.ShowMenu();
     }
-
+    
     private void Attack()
     {
         int playerDamage = _player.Attack();
@@ -64,6 +69,15 @@ public class GameDirector
     }
     private void UsePotion()
     {
+        if (_player.ActivePotion == null)
+        {
+            _consoleUI.ShowNoPotionSelected();
+            return;
+        }
+        int enemyDamage = _enemy.Attack();
+        _player.TakeDamage(enemyDamage);
+        _consoleUI.ShowAttackResult(_player,enemyDamage);
+        
         _player.UsePotion();
         OnTurnEnded?.Invoke();
     }
@@ -82,15 +96,30 @@ public class GameDirector
         _player.SetActivePotion(currentPotion);
     }
 
+    private void ShowStats()
+    {
+        int currentHealth = _player.Health;
+        int currentDamage = _player.Attack();
+        string weaponName = _player.ActiveWeapon?.Name ?? "Не выбрано";
+        string potionName = _player.ActivePotion?.Name ?? "Не выбрано";
+        _consoleUI.ShowStats(currentHealth, currentDamage, weaponName, potionName);
+    }
+
     private void SubscribeInEvent()
     {
         _player.OnPlayerHealed += HandlePlayerHealth;
         _player.RemoveDamageBuff += HandleRemoveBuff;
+        _player.OnBuffApplied += HandleAddBuff;
     }
 
     private void HandlePlayerHealth(int health)
     {
         _consoleUI.ShowHealMessage(health);
+    }
+
+    private void HandleAddBuff()
+    {
+        _consoleUI.ShowAddBuffMessage();
     }
 
     private void HandleRemoveBuff()

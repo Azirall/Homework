@@ -93,12 +93,26 @@ public class ConsoleUI
 
     public void ShowRemoveBuffMessage()
     {
-        Console.WriteLine("Удален бафф урона от зелья");
+        Console.WriteLine("Удален баф урона от зелья");
     }
 
-    public void ShowStats()
+    public void ShowAddBuffMessage()
     {
-        
+        Console.WriteLine("Добавлен баф урона от зелья");
+    }
+
+    public void ShowStats(int health, int damage, string weapon, string potion)
+    {
+        Console.WriteLine("\n");
+        Console.WriteLine($"Текущее здоровье: {health}");
+        Console.WriteLine($"Текущий урон: {damage}");
+        Console.WriteLine($"Активное оружие: {weapon}");
+        Console.WriteLine($"Активное зелье: {potion}");
+    }
+
+    public void ShowNoPotionSelected()
+    {
+        Console.WriteLine("Не выбрано активное зелье.");
     }
 }
 
