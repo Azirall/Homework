@@ -18,40 +18,38 @@ public class GameDirector
         _player = player;
         _enemy = enemy;
 
-
-        _consoleUI.OnMenuChoice += HandleMenuChoice;
+        
     }
 
     public void RunGame()
     {
+        SubscribeInEvent();
+        _consoleUI.ShowMenu();
+        
+        while (true)
+        {
+            GameLoop();
+        }
+    }
+
+    private void GameLoop()
+    {
+        int input = _consoleUI.ReadInput();
+        
+        switch (input)
+        {
+            case 1: Attack();
+                break;
+            case 2: UsePotion();
+                break;
+            case 3: ChangeWeapon();
+                break;
+            case 4: ChangePotion();
+                break;
+        }
         _consoleUI.ShowMenu();
     }
 
-    private void HandleMenuChoice(int choice)
-    {
-        if (choice == 0)
-        {
-            _consoleUI.ShowMenu();
-        }
-
-        switch (choice)
-        {
-            case 1:
-                Attack();
-                break;
-            case 2:
-                UsePotion();
-                break;
-            case 3:
-                ChangeWeapon();
-                break;
-            case 4:
-                ChangePotion();
-                break;
-        }
-
-    }
-    
     private void Attack()
     {
         int playerDamage = _player.Attack();
@@ -63,27 +61,40 @@ public class GameDirector
         _consoleUI.ShowAttackResult(_player,enemyDamage);
         
         OnTurnEnded?.Invoke();
-        _consoleUI.ShowMenu();
     }
     private void UsePotion()
     {
-        _player.ConsumePotion();
+        _player.UsePotion();
+        OnTurnEnded?.Invoke();
     }
     private void ChangeWeapon()
     {
         List<Weapon> weapons = _inventory.GetWeaponsList();
         _consoleUI.PrintItemList(weapons, out int choice);
         Weapon currentWeapon =  weapons[choice-1];
-        _player.ChangeWeapon(currentWeapon);
-        _consoleUI.ShowMenu();
+        _player.SetActiveWeapon(currentWeapon);
     }
     private void ChangePotion()
     {
         List<Potion> potions = _inventory.GetPotionList();
         _consoleUI.PrintItemList(potions, out int choice);
         Potion currentPotion = potions[choice-1];
-        _player.SetPotion(currentPotion);
-        _consoleUI.ShowMenu();
+        _player.SetActivePotion(currentPotion);
+    }
+
+    private void SubscribeInEvent()
+    {
+        _player.OnPlayerHealed += HandlePlayerHealth;
+        _player.RemoveDamageBuff += HandleRemoveBuff;
+    }
+
+    private void HandlePlayerHealth(int health)
+    {
+        _consoleUI.ShowHealMessage(health);
+    }
+
+    private void HandleRemoveBuff()
+    {
+        _consoleUI.ShowRemoveBuffMessage();
     }
 }
-

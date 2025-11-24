@@ -6,8 +6,7 @@ namespace ConsoleApp
         protected int health;
         protected int baseDamage;
 
-
-
+        
         public virtual int Attack()
         {
             return baseDamage;

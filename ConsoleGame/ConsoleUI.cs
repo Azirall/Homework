@@ -16,29 +16,20 @@ public class ConsoleUI
         Console.WriteLine("4) Выбрать зелье");
         Console.WriteLine("5) Показать статус");
         Console.WriteLine("0) Выход из игры");
-        Console.WriteLine("\n");
-
-        ReadMenuChoice();
+        
     }
+    
 
-    private void ReadMenuChoice()
+    public int ReadInput()
     {
         Console.WriteLine("\n");
-        Console.Write("Выберете действие: ");
-        Console.WriteLine("\n");
-
-        int input = ReadInput();
-        OnMenuChoice?.Invoke(input);
-    }
-
-    private int ReadInput()
-    {
-        string input = Console.ReadLine();
+        Console.Write("Сделайте выбор:");
+        string? input = Console.ReadLine();
         if (int.TryParse(input, out int choice))
             return choice;
 
         Console.WriteLine("Некорректный ввод: " + input);
-        return -1;
+        return 0;
     }
 
     public void ShowAttackResult(Character target, int damage)
@@ -78,7 +69,7 @@ public class ConsoleUI
         {
             for (int j = 0; j < list.Count; j++)
             {
-                Console.WriteLine($"{j + 1}) {potions[j].Name} | Лечение:{potions[j].HealPower} | Урон:{potions[j].AdditionalDamage} | Длительность:{potions[j].Duration}");
+                Console.WriteLine($"{j + 1}) {potions[j].Name} | Лечение:{potions[j].HealPower} | Урон:{potions[j].DamageBuff} | Длительность:{potions[j].Duration}");
             }
 
             Console.WriteLine("Выберете зелье");
@@ -93,6 +84,21 @@ public class ConsoleUI
 
         itemChoice = 0;
         ShowMenu();
+    }
+
+    public void ShowHealMessage(int heal)
+    {
+        Console.WriteLine($"Игрок был исцелен на {heal} хп");
+    }
+
+    public void ShowRemoveBuffMessage()
+    {
+        Console.WriteLine("Удален бафф урона от зелья");
+    }
+
+    public void ShowStats()
+    {
+        
     }
 }
 

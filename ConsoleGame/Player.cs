@@ -3,74 +3,94 @@ namespace ConsoleApp
 {
     public class Player : Character
     {
-  
-        private Weapon _activeWeapon;
-        private Potion _activePotion;
+        public event Action<int>? OnPlayerHealed;
+        public event Action OnBuffApplied;
+        public event Action RemoveDamageBuff;
+        private int _additionalDamage;
+        private Weapon? _activeWeapon;
+        private Potion? _activePotion;
         private int _potionDuration;
         private GameDirector _gameDirector;
+        
+
         public Player(string name, int health, int baseDamage)
         {
             Name = name;
             this.health = health;
             this.baseDamage = baseDamage;
-            
         }
 
         public void SetGameDirector(GameDirector director)
         {
             _gameDirector = director;
-            _gameDirector.OnTurnEnded += GetPotionEffect;
         }
-
-        private void Heal(int heal)
-        {
-            health += heal;
-        }
-        public void ChangeWeapon(Weapon weapon)
+        public void SetActiveWeapon(Weapon weapon)
         {
             _activeWeapon?.Unequip(this);
             _activeWeapon = weapon;
             _activeWeapon.Equip(this);
         }
 
-        public void SetAdditionalDamage(int additionalDamage)
-        {
-            baseDamage += additionalDamage;
-        }
-        public void RemoveAdditionalDamage(int additionalDamage)
-        {
-            baseDamage -= additionalDamage;
-        }
-
-        public void ConsumePotion()
-        {
-            if (_potionDuration != 0) return;
-
-            _potionDuration = _activePotion.Duration;
-            if (_activePotion.AdditionalDamage > 0)
-            {
-                SetAdditionalDamage(_activePotion.AdditionalDamage);
-            }
-        }
-
-        public void SetPotion(Potion potion)
+        public void SetActivePotion(Potion potion)
         {
             _activePotion = potion;
+            _potionDuration = _activePotion?.Duration ?? 0;
         }
 
-        private void GetPotionEffect()
+        public void UsePotion()
         {
-            if (_potionDuration > 0)
+            _activePotion?.Consume(this);
+            _gameDirector.OnTurnEnded += PotionTick;
+        }
+
+        private void PotionTick()
+        {
+            if (_activePotion is null)
+                return;
+
+            _potionDuration--;
+
+            if (_potionDuration >= 0)
             {
-                _potionDuration--;
-                Heal(_activePotion.HealPower);
+                _activePotion.Tick(this);
             }
-            else
+
+            if (_potionDuration < 0)
             {
-                RemoveAdditionalDamage(_activePotion.AdditionalDamage);
+                _gameDirector.OnTurnEnded -= PotionTick;
+                _activePotion.RemoveBuff(this);
+                RemoveDamageBuff?.Invoke();
             }
         }
+
+        public void Heal(int value)
+        {
+            health += value;
+            OnPlayerHealed?.Invoke(value);
+        }
+
+        public void AddDamageBuff(int value)
+        {
+            _additionalDamage += value;
+            OnBuffApplied?.Invoke();
+        }
+
+        public void AddAdditionalDamage(int value)
+        {
+            _additionalDamage += value;
+        }
+        
+        public void RemoveAdditionalDamage(int value)
+        {
+            _additionalDamage -= value;
+        }
+
+        public override int Attack()
+        {
+            return baseDamage + _additionalDamage;
+        }
     }
+
 }
 
 

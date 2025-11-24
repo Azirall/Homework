@@ -14,7 +14,7 @@ namespace ConsoleApp
 
         public void Equip(Player player)
         {
-            player.SetAdditionalDamage(AdditionalDamage);
+            player.AddAdditionalDamage(AdditionalDamage);
         }
 
         public void Unequip(Player player)
