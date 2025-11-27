@@ -1,0 +1,15 @@
+E:\Fork\Homework\Task journal\bin\Debug\net9.0\TaskJournal.exe
+E:\Fork\Homework\Task journal\bin\Debug\net9.0\TaskJournal.deps.json
+E:\Fork\Homework\Task journal\bin\Debug\net9.0\TaskJournal.runtimeconfig.json
+E:\Fork\Homework\Task journal\bin\Debug\net9.0\TaskJournal.dll
+E:\Fork\Homework\Task journal\bin\Debug\net9.0\TaskJournal.pdb
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.GeneratedMSBuildEditorConfig.editorconfig
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.AssemblyInfoInputs.cache
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.AssemblyInfo.cs
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.csproj.CoreCompileInputs.cache
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.sourcelink.json
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.dll
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\refint\TaskJournal.dll
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.pdb
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\TaskJournal.genruntimeconfig.cache
+E:\Fork\Homework\Task journal\obj\Debug\net9.0\ref\TaskJournal.dll
