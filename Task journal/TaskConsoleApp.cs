@@ -1,6 +1,6 @@
 ﻿namespace TaskJournal;
 
-public class ConsoleUi(LocalizationService localizationService, TaskManager taskManager)
+public class TaskConsoleApp(LocalizationService localizationService, TaskService taskService)
 {
     public void Start()
     {
@@ -82,11 +82,11 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
             : description!;
         
         Console.WriteLine($"Задача {name} | {printableDescription} | {localizationService.ToRussian(priority)} | {localizationService.ToRussian(category)} | {localizationService.ToRussian(status)} была добавлена в список");
-        taskManager.CreateNewTask(task);
+        taskService.AddTask(task);
     }
     private int ShowAllTasks()
     {
-        IReadOnlyList<TaskItem> allTasks = taskManager.GetAllTaskList();
+        IReadOnlyList<TaskItem> allTasks = taskService.GetAllTasks();
         ShowTaskList(allTasks);
         return allTasks.Count;
     }
@@ -119,7 +119,7 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
         {
             choice = ReadIntInput("Ошибка ввода, выберете номер задания из из списка ");
         }
-        taskManager.CompleteTask(choice);
+        taskService.ChangeTaskStatusToComplete(choice);
         Console.WriteLine($"Задача под номером {choice} отмечена как выполненная");
     }
 
@@ -132,13 +132,13 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
         {
             choice = ReadIntInput("Ошибка ввода, выберете номер задачи из из списка ");
         }
-        taskManager.DeleteTask(choice);
+        taskService.DeleteTask(choice);
         Console.WriteLine($"Задача под номером {choice} была удалена");
     }
 
     private void ShowSortedTaskByType<TEnum>() where TEnum : Enum
     {
-      var tasksByType =  taskManager.GetTaskListByType<TEnum>();
+      var tasksByType =  taskService.GetTaskListByType<TEnum>();
       ShowTaskList(tasksByType);
     }
     private void ShowTaskList(IReadOnlyList<TaskItem> tasks)
