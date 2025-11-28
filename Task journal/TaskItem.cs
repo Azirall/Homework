@@ -7,4 +7,9 @@ public class TaskItem(string name, string? description, Priority priority, Categ
     public Priority Priority { get; private set; } = priority;
     public Category Category { get; private set; } = category;
     public Status Status { get; private set; } = status;
+
+    public void ChangeTaskStatus(Status status)
+    {
+        Status = status;
+    }
 }

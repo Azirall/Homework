@@ -16,5 +16,14 @@ public class TaskManager (TaskService taskService)
     {
         return taskService.GetTaskListByType<TEnum>();
     }
-    
+
+    public void CompleteTask(int taskId)
+    {
+        taskService.ChangeTaskStatusToComplete(taskId);
+    }
+
+    public void DeleteTask(int taskId)
+    {
+        taskService.DeleteTask(taskId);
+    }
 }

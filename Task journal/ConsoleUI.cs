@@ -26,6 +26,12 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
             case 3:
                 ShowSortedTask();
                 break;
+            case 4:
+                SetTaskComplete();
+                break;
+            case 5:
+                DeleteTask();
+                break;
         }
     }
     
@@ -35,18 +41,18 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
         Console.WriteLine("1) Добавить задачу");
         Console.WriteLine("2) Посмотреть все задачи");
         Console.WriteLine("3) Вывести сортировку по типам");
+        Console.WriteLine("4) Завершить задачу");
+        Console.WriteLine("5) Удалить задачу");
     }
-
-    private int ReadIntInput(string inputText)
+    private int ReadIntInput(string inputMessage)
     {
-        Console.Write(inputText);
+        Console.Write(inputMessage);
         if (int.TryParse(Console.ReadLine(), out int input))
         {
             return input;
         }
         return -1;
     }
-
     private string? ReadStringInput(string inputText)
     {
         Console.WriteLine(inputText);
@@ -63,21 +69,27 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
         Console.WriteLine("Приоритет задачи:");
         Priority priority = HandleEnumListChoice<Priority>();
         
-        Console.Write("Категория задачи: \n");
+        Console.WriteLine("Категория задачи: ");
         Category category = HandleEnumListChoice<Category>();
         
-        Console.Write("Статус задачи: ");
+        Console.WriteLine("Статус задачи: ");
         Status status = HandleEnumListChoice<Status>();
         
         TaskItem task = new TaskItem(name, description, priority, category, status);
+        
+        string printableDescription = string.IsNullOrWhiteSpace(description)
+            ? "описание отсутствует"
+            : description!;
+        
+        Console.WriteLine($"Задача {name} | {printableDescription} | {localizationService.ToRussian(priority)} | {localizationService.ToRussian(category)} | {localizationService.ToRussian(status)} была добавлена в список");
         taskManager.CreateNewTask(task);
     }
-    private void ShowAllTasks()
+    private int ShowAllTasks()
     {
         IReadOnlyList<TaskItem> allTasks = taskManager.GetAllTaskList();
         ShowTaskList(allTasks);
+        return allTasks.Count;
     }
-
     private void ShowSortedTask()
     {
         Console.WriteLine();
@@ -98,13 +110,37 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
                 break;
         }
     }
+    private void SetTaskComplete()
+    {
+        int taskCount =  ShowAllTasks();
+        Console.WriteLine();
+        int choice = ReadIntInput("Выберете задачу, которое надо завершить ");
+        while (choice >= taskCount || choice < 0)
+        {
+            choice = ReadIntInput("Ошибка ввода, выберете номер задания из из списка ");
+        }
+        taskManager.CompleteTask(choice);
+        Console.WriteLine($"Задача под номером {choice} отмечена как выполненная");
+    }
+
+    private void DeleteTask()
+    {
+        int taskCount =  ShowAllTasks();
+        Console.WriteLine();
+        int choice = ReadIntInput("Выберете задачу, которое надо удалить ");
+        while (choice >= taskCount || choice < 0)
+        {
+            choice = ReadIntInput("Ошибка ввода, выберете номер задачи из из списка ");
+        }
+        taskManager.DeleteTask(choice);
+        Console.WriteLine($"Задача под номером {choice} была удалена");
+    }
 
     private void ShowSortedTaskByType<TEnum>() where TEnum : Enum
     {
       var tasksByType =  taskManager.GetTaskListByType<TEnum>();
       ShowTaskList(tasksByType);
     }
-
     private void ShowTaskList(IReadOnlyList<TaskItem> tasks)
     {
         Console.WriteLine();
@@ -153,10 +189,6 @@ public class ConsoleUi(LocalizationService localizationService, TaskManager task
         }
         return  values[choice-1];
     }
-
-    private void ChangeTaskStatus()
-    {
-        
-    }
+   
 
 }

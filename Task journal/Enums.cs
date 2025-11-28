@@ -2,21 +2,23 @@
 
 public enum Priority
 {
-    Low,
+    High,
     Medium,
-    High
+    Low,
 }
 
 public enum Status
 {
+    New,
+    InProgress,
+    Done
+}
+public enum Category
+{
+    
+    
     Study,
     Work,
     Home,
     Other 
-}
-public enum Category
-{
-    New,
-    InProgress,
-    Done
 }

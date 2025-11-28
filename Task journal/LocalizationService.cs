@@ -13,14 +13,14 @@ public class LocalizationService
             Category category => ToRussian(category),
         };
     }
-    private string ToRussian(Status status)
+    private string ToRussian(Category category)
     {
-        return status switch
+        return category switch
         {
-            Status.Study => "Учебные задачи",
-            Status.Work => "Рабочие задачи",
-            Status.Home => "Домашние задачи",
-            Status.Other => "Прочие задачи",
+            Category.Study => "Учебные задачи",
+            Category.Work => "Рабочие задачи",
+            Category.Home => "Домашние задачи",
+            Category.Other => "Прочие задачи",
         };
     }
 
@@ -34,13 +34,13 @@ public class LocalizationService
         };
     }
 
-    private string ToRussian(Category category)
+    private string ToRussian(Status status)
     {
-        return category switch
+        return status switch
         {
-            Category.New => "Новые задачи",
-            Category.InProgress => "Задачи в работе",
-            Category.Done => "Выполненные задачи",
+            Status.New => "Новые задачи",
+            Status.InProgress => "Задачи в работе",
+            Status.Done => "Выполненные задачи",
         };
     }
 }
