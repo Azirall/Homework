@@ -12,6 +12,12 @@ public class Target : MonoBehaviour
         StartCoroutine(nameof(DestroyAfterDelay));
     }
 
+    public void TakeDamage(float damage)
+    {
+        Debug.Log("Hit");
+        Destroy(gameObject);
+    }
+
     private IEnumerator DestroyAfterDelay()
     {
         Debug.Log("Target still alive");

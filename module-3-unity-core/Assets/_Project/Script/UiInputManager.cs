@@ -3,7 +3,7 @@ using Script;
 using UnityEngine;
 using Zenject;
 
-public class InputManager : MonoBehaviour
+public class UiInputManager : MonoBehaviour
 {
     private SceneLoader _sceneLoader;
 
