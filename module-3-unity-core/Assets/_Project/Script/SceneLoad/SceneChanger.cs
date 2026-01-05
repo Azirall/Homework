@@ -1,7 +1,5 @@
-using Script;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using Zenject;
 
 public class SceneChanger : MonoBehaviour, IPointerUpHandler

@@ -1,9 +1,6 @@
-﻿namespace Script
+﻿public enum SceneEnum
 {
-    public enum SceneEnum
-    {
-        Menu,
-        Game,
-        Quit
-    }
+    Menu,
+    Game,
+    Quit
 }

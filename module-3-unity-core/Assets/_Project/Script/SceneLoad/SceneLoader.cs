@@ -1,16 +1,26 @@
-using Script;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
+using IInitializable = Unity.VisualScripting.IInitializable;
 
 public class SceneLoader : IInitializable
 {
+    private SaveSystem _saveSystem;
+
+    [Inject]
+    private void Construct(SaveSystem saveSystem)
+    {
+        _saveSystem = saveSystem;
+    }
+
     public void Initialize()
     {
         ChangeScene(SceneEnum.Menu);
     }
     public void ChangeScene(SceneEnum sceneEnum)
     {
+        _saveSystem.Save();
+        
         switch (sceneEnum)
         {
             case SceneEnum.Menu:
