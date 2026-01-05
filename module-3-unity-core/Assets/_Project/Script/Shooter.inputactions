@@ -3,7 +3,7 @@
     "name": "Shooter",
     "maps": [
         {
-            "name": "Player",
+            "name": "Gameplay",
             "id": "4cddac2f-27c4-46cf-a0a7-7ef6bc34f96d",
             "actions": [
                 {
@@ -14,6 +14,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "23378054-79ca-4bdf-a7e8-ed4d44707417",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Look",
@@ -169,6 +178,17 @@
                 },
                 {
                     "name": "",
+                    "id": "42de6e90-279d-4237-a97d-77c3fd558faa",
+                    "path": "*/{Cancel}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c1f7a91b-d0fd-4a62-997e-7fb9b69bf235",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
@@ -258,7 +278,7 @@
             ]
         },
         {
-            "name": "UI",
+            "name": "Menu",
             "id": "f2e9a34f-0fbd-4a12-af61-120033321484",
             "actions": [
                 {

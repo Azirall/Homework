@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -6,13 +7,27 @@ public class Gun : MonoBehaviour
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _bulletSpawnPoint;
     
-    private PlayerInputReader _playerInput;
-    private float _reloadTime = 1f;
+    
+    private InputReader _playerInput;
+    private TargetStats _targetStats;
+    
+    private float _damage;
+    private float _bulletSpeed;
+    
+    private float _reloadTime;
     private float _currentReloadTime = 0;
     [Inject]
-    public void Construct(PlayerInputReader playerInput)
+    public void Construct(InputReader playerInput,TargetStats targetStats)
     {
+        _targetStats = targetStats;
         _playerInput = playerInput;
+    }
+
+    public void SetNewWeapon(WeaponData weaponData)
+    {
+        _damage = weaponData.BulletDamage;
+        _bulletSpeed = weaponData.BulletSpeed;
+        _reloadTime = weaponData.ReloadTime;
     }
 
     private void Update()
@@ -36,7 +51,10 @@ public class Gun : MonoBehaviour
         if (_bulletPrefab != null && _bulletSpawnPoint != null)
         {
            Bullet bullet = Instantiate(_bulletPrefab,_bulletSpawnPoint.position,_bulletSpawnPoint.rotation*Quaternion.Euler(90,0,0)).GetComponent<Bullet>();
+           
            bullet.Init(20,1,_bulletSpawnPoint.forward.normalized);
+           
+           _targetStats.AddShotInCounter();
            _currentReloadTime = _reloadTime;
         }
     }

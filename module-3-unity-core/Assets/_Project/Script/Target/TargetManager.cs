@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Zenject;
 using Random = UnityEngine.Random;
 
 public class TargetManager: MonoBehaviour
@@ -9,7 +10,16 @@ public class TargetManager: MonoBehaviour
     [SerializeField] private BoxCollider _spawnZone;
     [SerializeField] private float _spawnDelay = 4f;
     [SerializeField] private float _targetLifeTime = 3f;
-    private int _targetSpawn = 0;
+    
+    private TargetStats _targetStats;
+    private DiContainer _diContainer;
+
+    [Inject]
+    private void Construct(TargetStats targetStats, DiContainer diContainer)
+    {
+        _diContainer = diContainer;
+        _targetStats = targetStats;
+    }
     
     private void Start()
     {
@@ -23,10 +33,10 @@ public class TargetManager: MonoBehaviour
         {
             Vector3 spawnPosition = GetRandomPointInBox();
 
-            Target target = Instantiate(_targetPrefab, spawnPosition, Quaternion.identity).GetComponent<Target>();
+            Target target = _diContainer.InstantiatePrefab(_targetPrefab, spawnPosition, Quaternion.identity, null).GetComponent<Target>();
+            
+            _targetStats.AddSpawnedTarget();
             target.Init(_targetLifeTime);
-            _targetSpawn++;
-            Debug.Log($"Target spawn count: {_targetSpawn}");
             yield return new WaitForSeconds(_spawnDelay);
         }
     }
@@ -48,11 +58,11 @@ public class TargetManager: MonoBehaviour
     {
         if (_spawnZone == null)
         {
-            Debug.LogWarning("Зона спавна не выбрана");
+            Debug.LogError("Spawn Zone is missing");
         }
         if (_targetPrefab == null)
         {
-            Debug.LogWarning("Не назначен префаб цели");
+            Debug.LogError("Target Prefab is missing");
         }
     }
 }

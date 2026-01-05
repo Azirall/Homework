@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
+
 public class PlayerCameraController : MonoBehaviour
 {
     [SerializeField] private Transform _player;
@@ -7,19 +9,20 @@ public class PlayerCameraController : MonoBehaviour
     [SerializeField] private float _sensitivity = 0.1f;
     [SerializeField] private float _minPitch = -80f;
     [SerializeField] private float _maxPitch = 80f;
-
-    private Vector2 _look;
+    
+    private InputReader _inputReader;
     private float _pitch;
 
-    private void OnLook(InputValue value)
+    [Inject]
+    public void Construct(InputReader inputReader)
     {
-        _look = value.Get<Vector2>();
+        _inputReader = inputReader;
     }
 
     private void Update()
     {
-        float mouseX = _look.x * _sensitivity;
-        float mouseY = _look.y * _sensitivity;
+        float mouseX = _inputReader.Look.x * _sensitivity;
+        float mouseY = _inputReader.Look.y * _sensitivity;
 
         _player.Rotate(Vector3.up * mouseX);
 
