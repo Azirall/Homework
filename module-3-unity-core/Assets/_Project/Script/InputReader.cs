@@ -16,21 +16,16 @@ public class InputReader : MonoBehaviour
         _playerInput.SwitchCurrentActionMap("Gameplay");
     }
     
-    private void Update()
-    {
-        HandleButtons();
-
-    }
     private void OnLook(InputValue value)
     {
         Look = value.Get<Vector2>();
     }
 
-    private void HandleButtons()
+    private void OnFire(InputValue value)
     {
-        FireButtonPressed = Input.GetButton("Fire1");
+       FireButtonPressed = value.isPressed;
     }
-    
+
     private void OnCancel(InputValue value)
     { 
         _menuOpened = !_menuOpened;

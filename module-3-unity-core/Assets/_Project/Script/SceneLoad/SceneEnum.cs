@@ -3,6 +3,7 @@
     public enum SceneEnum
     {
         Menu,
-        Game
+        Game,
+        Quit
     }
 }

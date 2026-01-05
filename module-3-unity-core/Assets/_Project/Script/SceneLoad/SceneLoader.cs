@@ -1,5 +1,6 @@
 using Script;
 using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : IInitializable
@@ -17,6 +18,9 @@ public class SceneLoader : IInitializable
                 break;
             case SceneEnum.Game:
                 SceneManager.LoadSceneAsync(sceneBuildIndex: 1);
+                break;
+            case SceneEnum.Quit:
+                Application.Quit();
                 break;
         }
     }
