@@ -15,6 +15,7 @@ public class Gun : MonoBehaviour
     
     private float _reloadTime;
     private float _currentReloadTime = 0;
+    private bool _reloadWarned;
     [Inject]
     public void Construct(InputReader playerInput,TargetStats targetStats)
     {
@@ -34,6 +35,7 @@ public class Gun : MonoBehaviour
         if (_playerInput == null) return;
         
         if (_currentReloadTime >= 0) _currentReloadTime -= Time.deltaTime;
+        if (_currentReloadTime <= 0) _reloadWarned = false;
         
         if (_playerInput.FireButtonPressed && _currentReloadTime <= 0)
         {
@@ -42,7 +44,11 @@ public class Gun : MonoBehaviour
 
         if (_playerInput.FireButtonPressed && _currentReloadTime > 0)
         {
-            Debug.LogWarning("Reloading dont complete");
+            if (!_reloadWarned)
+            {
+                Debug.LogWarning("Reloading dont complete");
+                _reloadWarned = true;
+            }
         }
         
     }
