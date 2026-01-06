@@ -17,20 +17,20 @@ public class SceneLoader : IInitializable
     {
         ChangeScene(SceneEnum.Menu);
     }
-    public void ChangeScene(SceneEnum sceneEnum)
+    public void ChangeScene(SceneEnum sceneEnum, TargetStats stats = null)
     {
-        _saveSystem.Save();
-        
         switch (sceneEnum)
         {
             case SceneEnum.Menu:
                 SceneManager.LoadSceneAsync(sceneBuildIndex: 0);
+                _saveSystem.Save(stats);
                 break;
             case SceneEnum.Game:
                 SceneManager.LoadSceneAsync(sceneBuildIndex: 1);
                 break;
             case SceneEnum.Quit:
                 Application.Quit();
+                _saveSystem.Save(stats);
                 break;
         }
     }

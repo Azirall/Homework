@@ -7,7 +7,7 @@ public class Target : MonoBehaviour
 {
     private float _lifetime;
     private TargetStats _stats;
-
+    private Animator _animator;
     [Inject]
     public void Construct(TargetStats stats)
     {
@@ -17,6 +17,7 @@ public class Target : MonoBehaviour
     public void Init(float lifetime)
     {
         _lifetime = lifetime;
+        _animator = GetComponent<Animator>();
         Debug.Log("Target created");
         StartCoroutine(nameof(DestroyAfterDelay));
     }
@@ -24,11 +25,15 @@ public class Target : MonoBehaviour
     public void TakeDamage(float damage)
     {
         Debug.Log("Target hit!");
-        
+    
         _stats.AddDestroyedTarget();
         
-        Destroy(gameObject);
+        _animator.SetBool("IsDead", true);
+        Destroy(gameObject,0.5f);
     }
+   
+
+
 
     private IEnumerator DestroyAfterDelay()
     {

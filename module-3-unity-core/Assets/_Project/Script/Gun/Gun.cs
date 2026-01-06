@@ -6,11 +6,10 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _bulletSpawnPoint;
-    
+    [SerializeField] private Animator _animator;
     
     private InputReader _playerInput;
     private TargetStats _targetStats;
-    
     private float _damage;
     private float _bulletSpeed;
     
@@ -32,18 +31,20 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
-        if (_playerInput != null)
+        if (_playerInput == null) return;
+        
+        if (_currentReloadTime >= 0) _currentReloadTime -= Time.deltaTime;
+        
+        if (_playerInput.FireButtonPressed && _currentReloadTime <= 0)
         {
-            if (_currentReloadTime >= 0)
-            {
-                _currentReloadTime -= Time.deltaTime;
-                return;
-            }
-            if (_playerInput.FireButtonPressed)
-            {
-                Fire();
-            }
+            Fire();
         }
+
+        if (_playerInput.FireButtonPressed && _currentReloadTime > 0)
+        {
+            Debug.LogWarning("Reloading dont complete");
+        }
+        
     }
 
     private void Fire()
@@ -53,7 +54,7 @@ public class Gun : MonoBehaviour
            Bullet bullet = Instantiate(_bulletPrefab,_bulletSpawnPoint.position,_bulletSpawnPoint.rotation*Quaternion.Euler(90,0,0)).GetComponent<Bullet>();
            
            bullet.Init(20,1,_bulletSpawnPoint.forward.normalized);
-           
+           _animator.Play("CameraShake");
            _targetStats.AddShotInCounter();
            _currentReloadTime = _reloadTime;
         }

@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
-using Zenject;
-
 public class SaveSystem
 {
-    private TargetStats _stats;
-
-    [Inject]
-    private void Construct(TargetStats stats)
+    public void Save(TargetStats stats)
     {
-        _stats = stats;
-    }
+        if (stats == null)
+        {
+            return;
+        }
 
-
-    public void Save()
-    {
         int totalShots = PlayerPrefs.GetInt(nameof(SaveKey.ShotsCount), 0);
-        totalShots += _stats.ShotsCount;
+        totalShots += stats.ShotsCount;
+        int maxDestroyedTargets = PlayerPrefs.GetInt(nameof(SaveKey.MaxDestroyedTargets), 0);
+        if (stats.MaxDestroyedTargets > maxDestroyedTargets)
+        {
+            maxDestroyedTargets = stats.MaxDestroyedTargets;
+        }
         
         PlayerPrefs.SetInt(nameof(SaveKey.ShotsCount), totalShots);
-        PlayerPrefs.SetInt(nameof(SaveKey.MaxDestroyedTargets),_stats.MaxDestroyedTargets);
+        PlayerPrefs.SetInt(nameof(SaveKey.MaxDestroyedTargets), maxDestroyedTargets);
         
         PlayerPrefs.Save();
         Debug.Log("Data saved");

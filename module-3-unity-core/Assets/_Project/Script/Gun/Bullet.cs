@@ -42,6 +42,7 @@ public class Bullet : MonoBehaviour
         }
         if (_currentLifeTime <= 0)
         {
+            Debug.Log("Miss, bullet destroyed");
             Destroy(gameObject);
         }
     }
