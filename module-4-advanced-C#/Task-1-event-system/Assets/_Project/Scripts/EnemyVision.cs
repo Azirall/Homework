@@ -15,7 +15,7 @@ public class EnemyVision : MonoBehaviour, IEventManagerConsumer
     {
         if (other.CompareTag("Npc"))
         {
-            GameEvent gameEvent = new(GameEventType.BattleStart,"Противник обнаружил нпс в точке: ");
+            GameEvent gameEvent = new(GameEventType.BattleStart,"НПС прячется");
             _eventManager.TriggerEvent(gameEvent);
         }
     }
