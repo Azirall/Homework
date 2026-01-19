@@ -1,16 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
-{   
-    
-    private EventManager _eventManager;
+{
+    [SerializeField] private Transform _root;
+
     private void Awake()
     {
-        _eventManager = new EventManager();
-        
-        foreach (IEventManagerConsumer consumer in transform.GetComponentsInChildren<IEventManagerConsumer>())
+        EventManager eventManager = new EventManager();
+        AnalyticsPresenter analyticsPresenter = new AnalyticsPresenter(eventManager);
+        GameServices services = new GameServices(eventManager,analyticsPresenter);
+
+        foreach (IGameServicesConsumer consumer in _root.GetComponentsInChildren<IGameServicesConsumer>(true))
         {
-            consumer.Initialize(_eventManager);
+            consumer.Initialize(services);
         }
     }
 }

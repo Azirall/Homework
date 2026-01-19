@@ -1,8 +1,8 @@
 ﻿public enum GameEventType
 {
     BattleStart,
-    NpcMoveToChest,
-    ItemPickUp,
+    NpcSawChest,
+    ItemPicked,
     WeatherIsRaining,
     OnEnemyActiveStateChanged,
 }

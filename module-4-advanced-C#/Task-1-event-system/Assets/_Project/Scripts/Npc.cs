@@ -1,56 +1,70 @@
-﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using System.Threading;
 
-public class Npc : MonoBehaviour, IEventManagerConsumer
+public class Npc : MonoBehaviour, IGameServicesConsumer
 {
     [SerializeField] private Transform _hidePointTransform;
     [SerializeField] private Transform _chestTransform;
     [SerializeField] private float _speed = 1f;
 
+    private readonly Dictionary<GameEventType, Transform> _targets = new();
     private Vector3 _startPos;
-    private Rigidbody2D _rb;
     private EventManager _eventManager;
+    private Coroutine _coroutine;
 
-    private CancellationTokenSource _moveCts;
-
-    public void Initialize(EventManager eventManager)
+    public void Initialize(GameServices services)
     {
-        _eventManager = eventManager;
+        _eventManager = services.EventManager;
+        _eventManager.OnGameEvent += HandleEvent;
     }
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        _eventManager.OnGameEvent += HandleEvent;
         _startPos = transform.position;
+        InitTargetsDictionary();
+    }
+
+    private void InitTargetsDictionary()
+    {
+        _targets[GameEventType.WeatherIsRaining] = _hidePointTransform;
+        _targets[GameEventType.BattleStart] = _hidePointTransform;
+        _targets[GameEventType.NpcSawChest] = _chestTransform;
     }
 
     private void HandleEvent(GameEvent gameEvent)
     {
-        switch (gameEvent.EventType)
-        {
-            case GameEventType.WeatherIsRaining:
-                StartMove(NpcMoveDestination.Hide);
-                break;
-            
-            case GameEventType.BattleStart:
-                StartMove(NpcMoveDestination.Hide);
-                break;
+        if (!_targets.TryGetValue(gameEvent.EventType, out var target))
+            return;
 
-            case GameEventType.NpcMoveToChest:
-                StartMove(NpcMoveDestination.Chest);
-                break;
-        }
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        _coroutine = StartCoroutine(MoveCoroutine(target));
     }
 
-    private void StartMove(NpcMoveDestination destination)
+    IEnumerator MoveCoroutine(Transform target)
     {
+        while (Vector2.Distance(transform.position, target.position) > 0.1f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
+            yield return null;
+        }
 
+        yield return new WaitForSeconds(1f);
+
+        while (Vector2.Distance(transform.position, _startPos) > 0.1f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, _startPos, _speed * Time.deltaTime);
+            yield return null;
+        }
     }
 
     private void OnDestroy()
     {
-        _eventManager.OnGameEvent -= HandleEvent;
+        if (_eventManager != null)
+        {
+            _eventManager.OnGameEvent -= HandleEvent;
+        }
     }
 }

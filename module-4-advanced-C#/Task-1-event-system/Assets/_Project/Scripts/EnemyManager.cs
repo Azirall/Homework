@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class EnemyManager : MonoBehaviour, IEventManagerConsumer
+public class EnemyManager : MonoBehaviour, IGameServicesConsumer
 {
     [SerializeField] private List<GameObject> _enemyList;
     private EventManager _eventManager;
-    
-    public void Initialize(EventManager eventManager)
+
+    public void Initialize(GameServices services)
     {
-        _eventManager = eventManager;
+        _eventManager = services.EventManager;
         _eventManager.OnGameEvent += ChangeEnemyState;
     }
 
@@ -24,6 +23,9 @@ public class EnemyManager : MonoBehaviour, IEventManagerConsumer
 
     private void OnDestroy()
     {
-        _eventManager.OnGameEvent -= ChangeEnemyState;
+        if (_eventManager != null)
+        {
+            _eventManager.OnGameEvent -= ChangeEnemyState;
+        }
     }
 }
