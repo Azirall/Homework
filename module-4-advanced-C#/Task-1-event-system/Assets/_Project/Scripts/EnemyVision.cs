@@ -1,13 +1,12 @@
 ﻿
 using UnityEngine;
-using Zenject;
 
-public class EnemyVision : MonoBehaviour
+
+public class EnemyVision : MonoBehaviour, IEventManagerConsumer
 {
     private EventManager _eventManager;
 
-    [Inject]
-    public void Construct(EventManager eventManager)
+    public void Initialize(EventManager eventManager)
     {
         _eventManager = eventManager;
     }
@@ -16,8 +15,9 @@ public class EnemyVision : MonoBehaviour
     {
         if (other.CompareTag("Npc"))
         {
-            GameEvent gameEvent = new(GameEventType.BattleStart,"Противник обнаружил нпс в точке: ",other.transform.position);
+            GameEvent gameEvent = new(GameEventType.BattleStart,"Противник обнаружил нпс в точке: ");
             _eventManager.TriggerEvent(gameEvent);
         }
     }
+    
 }

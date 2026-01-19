@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class GameEvent
@@ -8,12 +7,11 @@ public class GameEvent
     public string Description { get; private set; }
     
     public object Payload { get; private set; }
-    public GameEvent(GameEventType eventType, string description, [CanBeNull] object payload)
+    public GameEvent(GameEventType eventType, string description)
     {
         EventType = eventType;
         EventTime = Time.time;
         Description = description;
-        Payload = payload;
     }
 }
 
