@@ -19,7 +19,10 @@ public class AnalyticsPresenter
             return "Аналитика: событий пока нет.";
         }
 
-        var battleCount = eventList.Count(gameEvent => gameEvent.EventType == GameEventType.BattleStart);
+        var battleEvents = eventList
+            .Where(gameEvent => gameEvent.EventType == GameEventType.BattleStart)
+            .Select(gameEvent => gameEvent.ToLogString())
+            .ToList();
         var last5 = eventList.OrderByDescending(gameEvent => gameEvent.EventTime).Take(5).Select(gameEvent => gameEvent.ToLogString()).ToList();
         var itemPickedCount = eventList.Count(gameEvent => gameEvent.EventType == GameEventType.ItemPicked);
         var topGroup = eventList.GroupBy(gameEvent => gameEvent.EventType)
@@ -27,9 +30,11 @@ public class AnalyticsPresenter
 
         return
             "Аналитика:\n" +
-            $"- Боёв начато: {battleCount}\n" +
+            $"- Боёв начато: {battleEvents.Count}\n" +
+            $"- BattleStart events:\n  {string.Join("\n  ", battleEvents)}\n" +
             $"- Предметов подобрано: {itemPickedCount}\n" +
             $"- Самое частое событие: {topGroup.Key} ({topGroup.Count()})\n" +
             $"- Последние 5 событий:\n  {string.Join("\n  ", last5)}";
     }
 }
+

@@ -4,7 +4,10 @@ public static class GameEventExtensions
     {
         string timeStamp = gameEvent.EventTime.ToString("HH:mm:ss");
         string eventName = GetEventName(gameEvent.EventType);
-        return $"[{timeStamp}] {eventName}: {gameEvent.Description}";
+        string payloadText = gameEvent.Payload != null
+            ? $" | {gameEvent.Payload.ToDisplayString()}"
+            : string.Empty;
+        return $"[{timeStamp}] {eventName}: {gameEvent.Description}{payloadText}";
     }
 
     private static string GetEventName(GameEventType eventType)
