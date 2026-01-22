@@ -13,7 +13,8 @@ public class EnemyVision : MonoBehaviour, IGameServicesConsumer
     {
         if (other.CompareTag("Npc"))
         {
-            GameEvent gameEvent = new(GameEventType.BattleStart, "нпс прячется от угрозы");
+            var payload = new EnemySpottedPayload(transform.position);
+            GameEvent gameEvent = new(GameEventType.BattleStart, "нпс прячется от угрозы", payload);
             _eventManager.TriggerEvent(gameEvent);
         }
     }
