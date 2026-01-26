@@ -4,7 +4,7 @@ using System;
 [Serializable]
 public class NewsItemDto
 {
-    public string? Title;
+    public string? title;
     public string? content;
     public string timestamp;
 }
