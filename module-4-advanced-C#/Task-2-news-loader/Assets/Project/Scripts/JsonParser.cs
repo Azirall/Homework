@@ -13,8 +13,7 @@ public static class JsonParser
                 NewsWrapperDto wrapper = JsonUtility.FromJson<NewsWrapperDto>(wrappedJson);
                 
                 
-                if (wrapper == null || wrapper.items == null)
-                        throw new InvalidDataException("Некорректный JSON");
+                if (wrapper == null || wrapper.items == null) throw new InvalidDataException("Некорректный JSON");
                 
                 newsItems.AddRange(wrapper.items);
                 

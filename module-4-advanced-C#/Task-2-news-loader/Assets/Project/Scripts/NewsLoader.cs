@@ -14,20 +14,21 @@ public class NewsLoader
         try
         {
             var path = Path.Combine(Application.streamingAssetsPath, _fileName);
-            
+
             var json = await File.ReadAllTextAsync(path);
-            
+
             newsList = json.DeserializeNewsItems().ToNewsItems();
-            
+
         }
         catch (FileNotFoundException e)
         {
-           Debug.LogWarning("Файл не найден");
+            throw new NewsLoadException("File not found", e);
         }
-        catch (ArgumentException e)
+        catch (InvalidDataException e)
         {
-            throw;
+            throw new NewsLoadException("Invalid json", e);
         }
+
         return newsList;
     }
 }
