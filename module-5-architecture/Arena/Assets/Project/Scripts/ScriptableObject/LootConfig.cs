@@ -7,5 +7,6 @@ public class LootConfig : ScriptableObject
   [SerializeField] private int _lootItemAmount = 5;
   [SerializeField] private float _lootSpawnTime = 2f;
   public int LootItemAmount => _lootItemAmount;
+  public float LootSpawnTime => _lootSpawnTime;
   public GameObject Prefab => _prefab;
 }

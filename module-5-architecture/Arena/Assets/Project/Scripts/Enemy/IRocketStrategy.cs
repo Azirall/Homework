@@ -1,4 +1,6 @@
-﻿public class IRocketStrategy
-{
-        private void Handle() { }
+﻿using UnityEngine;
+
+public interface IRocketStrategy
+{ 
+    void Handle();
 }

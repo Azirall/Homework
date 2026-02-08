@@ -20,15 +20,15 @@ public class Bootstrap : MonoBehaviour
         } 
         PoolService _poolService = new PoolService(_enemyConfig,_lootConfig, _sceneContext.PoolContainer);
         
-        _spawnService = new SpawnService(_enemyConfig, _gameConfig, _lootConfig, _poolService, this, _sceneContext.SpawnZone);
+        _spawnService = new SpawnService(_enemyConfig, _gameConfig, _lootConfig, _poolService, this,
+            _sceneContext.SpawnZone,_sceneContext.PlayerController.transform);
         
         _gameStateService = new GameStateService(_gameConfig);
         
-        _sceneContext.PlayerController.Init(_sceneContext.InputSystem);
+        _sceneContext.PlayerController.Init(_sceneContext.InputSystem, _gameConfig);
         _gameStateService.Init();
         
     }
-
     private void Start()
     {
         _gameStateService.StartGame();

@@ -18,7 +18,7 @@ public class GameStateService
 
     private void HandleEvent(IGameEvent gameEvent)
     {
-        if (gameEvent is ItemPickedUp)
+        if (gameEvent is ItemPicked)
         {
             _currentScore++;
             EventBus.RaiseGameEvent(new ScoreChanged(_currentScore));

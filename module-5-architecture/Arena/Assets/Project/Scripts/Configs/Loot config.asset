@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4419d41313ce4a7b835225575993c67f, type: 3}
   m_Name: Loot config
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 0}
+  _prefab: {fileID: 4087164461156919169, guid: ead4c2002f9c61a4a832ab92abcd72d6, type: 3}
   _lootItemAmount: 5
+  _lootSpawnTime: 2

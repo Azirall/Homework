@@ -2,14 +2,25 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyController : MonoBehaviour
 {
     private Action _returnAction;
     private float _moveSpeed;
-    public void Init(Action returnAction,float speed)
+    private IRocketStrategy _rocketStrategy;
+    
+    public void Init(Action returnAction)
     {
         _returnAction = returnAction;
-        _moveSpeed = speed;
+    }
+    public void SetStrategy(IRocketStrategy strategy)
+    {
+        _rocketStrategy = strategy;
+    }
+
+    private void FixedUpdate()
+    {
+        _rocketStrategy?.Handle();
     }
 
     public void DieAfterSecond(float seconds)

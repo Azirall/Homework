@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7db7ea338c4db088edfec99380ce96, type: 3}
   m_Name: enemyConfig
   m_EditorClassIdentifier: 
-  _enemyPrefabs:
-  - {fileID: 3887928334156791368, guid: 945cb2eda5ef37f4fad7993f28543bd7, type: 3}
+  _enemyPrefab: {fileID: 3887928334156791368, guid: 945cb2eda5ef37f4fad7993f28543bd7, type: 3}
   _enemySpeed: 4
   _lifeTime: 10
