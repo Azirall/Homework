@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 public class SceneContext : MonoBehaviour
@@ -7,10 +7,12 @@ public class SceneContext : MonoBehaviour
     [SerializeField] private Transform _spawnZone;
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private InputSystem _inputSystem;
+    [SerializeField] private LogPresenter _logPresenter;
     public PlayerController PlayerController => _playerController;
     public Transform PoolContainer => _poolContainer;
     public InputSystem InputSystem => _inputSystem;
     public Transform SpawnZone => _spawnZone;
+    public LogPresenter LogPresenter => _logPresenter;
 
     private void OnValidate()
     {
@@ -22,6 +24,11 @@ public class SceneContext : MonoBehaviour
         if (_spawnZone == null)
         {
             Debug.LogError("Spawn zone in Scene Context is null.");
+        }
+
+        if (_logPresenter == null)
+        {
+            Debug.LogError("Log presenter in Scene Context is null.");
         }
     }
 }

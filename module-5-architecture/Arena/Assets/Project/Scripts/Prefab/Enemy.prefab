@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66ea35c016e4b3e93c47758e330f46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rocketRb: {fileID: 76965973399936921}
 --- !u!50 &76965973399936921
 Rigidbody2D:
   serializedVersion: 4
@@ -122,7 +123,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0

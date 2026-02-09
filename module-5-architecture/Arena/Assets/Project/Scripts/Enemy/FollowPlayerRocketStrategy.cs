@@ -2,15 +2,18 @@
 
 public class FollowPlayerRocketStrategy : IRocketStrategy
 {
-        private Transform _playerTransform;
+        private readonly Transform _playerTransform;
         private Rigidbody2D _rocketRb;
         private float _speed;
-        public FollowPlayerRocketStrategy(Rigidbody2D rocketRb, Transform playerTransform, float moveSpeed)
+        public FollowPlayerRocketStrategy(Transform playerTransform, float moveSpeed)
         {
                 _playerTransform = playerTransform;
-                _rocketRb = rocketRb;
                 _speed = moveSpeed;
-                
+        }
+
+        public void Init(Rigidbody2D rocketRb)
+        {
+                _rocketRb = rocketRb;
         }
 
         public void Handle()

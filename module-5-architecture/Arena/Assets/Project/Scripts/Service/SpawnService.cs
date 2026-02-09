@@ -1,28 +1,14 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 
 public sealed class SpawnService : IDisposable
 {
-    private readonly GameConfig _gameConfig;
-    private readonly EnemyConfig _enemyConfig;
-    private readonly MonoBehaviour _runner;
-    private readonly PoolService _pool;
-    private readonly LootConfig _lootConfig;
-    
-    private Transform _playerTransform;
-    private Transform _spawnZone;
-    public SpawnService(EnemyConfig enemyConfig, GameConfig gameConfig,LootConfig lootConfig, PoolService pool,
-                        MonoBehaviour runner, Transform spawnZone, Transform playerTransform)
+    private readonly SpawnServiceContext _context;
+
+    public SpawnService(SpawnServiceContext context)
     {
-        _enemyConfig = enemyConfig;
-        _gameConfig = gameConfig;
-        _lootConfig = lootConfig;
-        _pool = pool;
-        _runner = runner;
-        _spawnZone = spawnZone;
-        _playerTransform = playerTransform;
-        
+        _context = context;
         EventBus.OnGameEvent += HandleEvent;
     }
 
@@ -33,8 +19,8 @@ public sealed class SpawnService : IDisposable
         switch (s.GameState)
         {
             case GameState.Init:
-                _pool.WarmupEnemy(_gameConfig.MaxEnemy);
-                _pool.WarmupItem(_lootConfig.LootItemAmount);
+                _context.Pool.WarmupEnemy(_context.GameConfig.MaxEnemy);
+                _context.Pool.WarmupItem(_context.LootConfig.LootItemAmount);
                 break;
 
             case GameState.Playing:
@@ -50,18 +36,18 @@ public sealed class SpawnService : IDisposable
 
     private void StartSpawning()
     {
-        _runner.StartCoroutine(EnemySpawnCoroutine());
-        _runner.StartCoroutine(ItemSpawnCoroutine());
+        _context.Runner.StartCoroutine(EnemySpawnCoroutine());
+        _context.Runner.StartCoroutine(ItemSpawnCoroutine());
     }
 
     private void StopSpawning()
     {
-        _runner.StopAllCoroutines();
+        _context.Runner.StopAllCoroutines();
     }
 
     private IEnumerator EnemySpawnCoroutine()
     {
-        var delay = new WaitForSeconds(_gameConfig.EnemyRespawnTime);
+        var delay = new WaitForSeconds(_context.GameConfig.EnemyRespawnTime);
 
         while (true)
         {
@@ -72,7 +58,7 @@ public sealed class SpawnService : IDisposable
 
     private IEnumerator ItemSpawnCoroutine()
     {
-        var delay = new WaitForSeconds(_lootConfig.LootSpawnTime);
+        var delay = new WaitForSeconds(_context.LootConfig.LootSpawnTime);
 
         while (true)
         {
@@ -84,33 +70,35 @@ public sealed class SpawnService : IDisposable
 
     private void SpawnOneEnemy()
     {
-        GameObject enemyObj = _pool.RentEnemy();
+        GameObject enemyObj = _context.Pool.RentEnemy();
         
-        if(enemyObj == null) return; 
-        
-        enemyObj.transform.position = _spawnZone.GetRandomPointInside();
+        if (enemyObj == null) return; 
+
+        enemyObj.transform.position = _context.SpawnZone.GetRandomPointInside();
 
         var enemy = enemyObj.GetComponent<EnemyController>();
-        Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
-        enemy.Init(() => _pool.ReturnEnemy(enemyObj));
+        float speed = _context.EnemyConfig.MoveSpeed;
         
-        enemy.SetStrategy(new FollowPlayerRocketStrategy(rb, _playerTransform,_enemyConfig.MoveSpeed));
+        enemy.Init(() => _context.Pool.ReturnEnemy(enemyObj));
+        
+        
+        enemy.SetStrategy(new FollowPlayerRocketStrategy(_context.PlayerTransform,speed));
         
         enemyObj.SetActive(true);
-
-        enemy.DieAfterSecond(_enemyConfig.LifeTime);
+        EventBus.RaiseGameEvent(new EnemySpawned());
+        enemy.DieAfterSecond(_context.EnemyConfig.LifeTime);
     }
 
     private void SpawnOneItem()
     {
-        GameObject itemObj = _pool.RentItem();
+        GameObject itemObj = _context.Pool.RentItem();
         
-        if(itemObj == null) return;
+        if (itemObj == null) return;
         
-        itemObj.transform.position = _spawnZone.GetRandomPointInside();
+        itemObj.transform.position = _context.SpawnZone.GetRandomPointInside();
         PickupItem item = itemObj.GetComponent<PickupItem>();
         
-        item.Init(() => _pool.ReturnItem(itemObj));
+        item.Init(() => _context.Pool.ReturnItem(itemObj));
         
         itemObj.SetActive(true);
     }
