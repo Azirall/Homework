@@ -4,6 +4,7 @@ public class MenuPresenter : MonoBehaviour
 {
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private MenuTitleView _menuTitleView;
+    [SerializeField] private GameObject _continueButton;
     private void Start()
     {
         EventBus.OnGameEvent += HandleEvent;
@@ -13,8 +14,9 @@ public class MenuPresenter : MonoBehaviour
     {
         if (gameEvent is GameStateChanged state)
         {
-            _canvasGroup.alpha =
-                state.GameState is GameState.Paused or GameState.Win or GameState.Lose ? 1 : 0;
+            _canvasGroup.alpha = state.GameState is GameState.Paused or GameState.Win or GameState.Lose ? 1 : 0;
+            _continueButton.SetActive(state.GameState == GameState.Paused);
+            
             switch (state.GameState)
             {
                 case GameState.Paused:
@@ -28,5 +30,10 @@ public class MenuPresenter : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        EventBus.OnGameEvent -= HandleEvent;
     }
 }

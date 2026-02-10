@@ -9,7 +9,7 @@ public class PickupItem : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             EventBus.RaiseGameEvent(new ItemPicked());
-            _returnAction();
+            _returnAction?.Invoke();
         }
     }
 

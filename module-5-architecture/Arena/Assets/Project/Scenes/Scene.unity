@@ -177,6 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 229473052}
   _menuTitleView: {fileID: 229473051}
+  _continueButton: {fileID: 837811617}
 --- !u!114 &229473049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +408,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameConfig: {fileID: 11400000, guid: 6c2368cab804dc24da1a87ea8d63f3d4, type: 2}
   _lootConfig: {fileID: 11400000, guid: 63fc26d2b4c00ed46bc285f8ec0e6dd9, type: 2}
-  _enemyConfig: {fileID: 11400000, guid: 0b822b749033aa14bbc59211bbb96960, type: 2}
+  _enemyConfigs:
+  - {fileID: 11400000, guid: 0b822b749033aa14bbc59211bbb96960, type: 2}
+  - {fileID: 11400000, guid: 8e2df88b88684714b88da652da8339e3, type: 2}
   _sceneContext: {fileID: 460089485}
 --- !u!114 &460089483
 MonoBehaviour:
@@ -2613,6 +2616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _logView: {fileID: 1973163301}
+  _logsToDisplay: 3
 --- !u!1 &1995695325
 GameObject:
   m_ObjectHideFlags: 0

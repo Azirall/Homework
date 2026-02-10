@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Patrol rocket
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 3887928334156791368, guid: 945cb2eda5ef37f4fad7993f28543bd7, type: 3}
+  _type: 1
   _enemySpeed: 4
   _lifeTime: 10

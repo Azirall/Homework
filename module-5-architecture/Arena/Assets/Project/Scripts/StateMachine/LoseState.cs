@@ -7,9 +7,6 @@ public class LoseState : IGameState
     {
         _spawnService = spawnService;
     }
-
-    public GameTrigger GameTrigger { get; private set; }
-
     public void Enter()
     {
         _spawnService.StopSpawning();

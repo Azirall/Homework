@@ -7,6 +7,8 @@ public sealed class SpawnService
     private readonly SpawnServiceContext _context;
     private readonly List<GameObject> _activeEnemies = new();
     private readonly List<GameObject> _activeItems = new();
+    private Coroutine _enemySpawnCoroutine;
+    private Coroutine _itemSpawnCoroutine;
 
     public SpawnService(SpawnServiceContext context)
     {
@@ -21,13 +23,30 @@ public sealed class SpawnService
 
     public void StartSpawning()
     {
-        _context.Runner.StartCoroutine(EnemySpawnCoroutine());
-        _context.Runner.StartCoroutine(ItemSpawnCoroutine());
+        if (_enemySpawnCoroutine == null)
+        {
+            _enemySpawnCoroutine = _context.Runner.StartCoroutine(EnemySpawnCoroutine());
+        }
+
+        if (_itemSpawnCoroutine == null)
+        {
+            _itemSpawnCoroutine = _context.Runner.StartCoroutine(ItemSpawnCoroutine());
+        }
     }
 
     public void StopSpawning()
     {
-        _context.Runner.StopAllCoroutines();
+        if (_enemySpawnCoroutine != null)
+        {
+            _context.Runner.StopCoroutine(_enemySpawnCoroutine);
+            _enemySpawnCoroutine = null;
+        }
+
+        if (_itemSpawnCoroutine != null)
+        {
+            _context.Runner.StopCoroutine(_itemSpawnCoroutine);
+            _itemSpawnCoroutine = null;
+        }
     }
 
     public void ResetAllSpawnedObjects()
@@ -74,30 +93,68 @@ public sealed class SpawnService
             SpawnOneItem();
             yield return delay;
         }
-        
     }
 
     private void SpawnOneEnemy()
     {
-        GameObject enemyObj = _context.Pool.RentEnemy();
-        
-        if (enemyObj == null) return; 
+        if (!TryRentEnemy(out var enemyConfig, out var enemyObj))
+        {
+            return;
+        }
 
         enemyObj.transform.position = _context.SpawnZone.GetRandomPointInside();
 
         var enemy = enemyObj.GetComponent<EnemyController>();
-        float speed = _context.EnemyConfig.MoveSpeed;
-        
+
         _activeEnemies.Add(enemyObj);
-        enemy.Init(() =>{ _activeEnemies.Remove(enemyObj);_context.Pool.ReturnEnemy(enemyObj);});
-        
-        enemy.SetStrategy(new FollowPlayerRocketStrategy(_context.PlayerTransform,speed));
-        
+        enemy.Init(() =>
+        {
+            _activeEnemies.Remove(enemyObj);
+            _context.Pool.ReturnEnemy(enemyObj);
+        });
+
+        enemy.SetStrategy(_context.StrategyFactory.Create(enemyConfig, _context.SpawnZone));
+
         enemyObj.SetActive(true);
         EventBus.RaiseGameEvent(new EnemySpawned());
-        enemy.DieAfterSecond(_context.EnemyConfig.LifeTime);
+        enemy.DieAfterSecond(enemyConfig.LifeTime);
     }
-    
+
+    private bool TryRentEnemy(out EnemyConfig enemyConfig, out GameObject enemyObj)
+    {
+        enemyConfig = null;
+        enemyObj = null;
+
+        var configs = _context.EnemyConfigs;
+        if (configs == null || configs.Count == 0)
+        {
+            return false;
+        }
+
+        int startIndex = Random.Range(0, configs.Count);
+
+        for (int i = 0; i < configs.Count; i++)
+        {
+            var candidate = configs[(startIndex + i) % configs.Count];
+            if (candidate == null)
+            {
+                continue;
+            }
+
+            var rented = _context.Pool.RentEnemy(candidate);
+            if (rented == null)
+            {
+                continue;
+            }
+
+            enemyConfig = candidate;
+            enemyObj = rented;
+            return true;
+        }
+
+        return false;
+    }
+
     private void SpawnOneItem()
     {
         GameObject itemObj = _context.Pool.RentItem();

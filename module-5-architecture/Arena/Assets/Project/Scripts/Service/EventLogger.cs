@@ -12,6 +12,11 @@ public class EventLogger
         EventBus.OnGameEvent += HandleEvent;
     }
 
+    public void Dispose()
+    {
+        EventBus.OnGameEvent -= HandleEvent;
+    }
+
     private void HandleEvent(IGameEvent gameEvent)
     {
         switch (gameEvent)

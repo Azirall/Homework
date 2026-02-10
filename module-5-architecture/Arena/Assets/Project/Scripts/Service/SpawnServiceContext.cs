@@ -1,30 +1,31 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnServiceContext
 {
     public GameConfig GameConfig { get; }
-    public EnemyConfig EnemyConfig { get; }
+    public IReadOnlyList<EnemyConfig> EnemyConfigs { get; }
     public LootConfig LootConfig { get; }
     public PoolService Pool { get; }
+    public IEnemyStrategyFactory StrategyFactory { get; }
     public MonoBehaviour Runner { get; }
     public Transform SpawnZone { get; }
-    public Transform PlayerTransform { get; }
 
     public SpawnServiceContext(
         GameConfig gameConfig,
-        EnemyConfig enemyConfig,
+        IReadOnlyList<EnemyConfig> enemyConfigs,
         LootConfig lootConfig,
         PoolService pool,
+        IEnemyStrategyFactory strategyFactory,
         MonoBehaviour runner,
-        Transform spawnZone,
-        Transform playerTransform)
+        Transform spawnZone)
     {
         GameConfig = gameConfig;
-        EnemyConfig = enemyConfig;
+        EnemyConfigs = enemyConfigs;
         LootConfig = lootConfig;
         Pool = pool;
+        StrategyFactory = strategyFactory;
         Runner = runner;
         SpawnZone = spawnZone;
-        PlayerTransform = playerTransform;
     }
 }
