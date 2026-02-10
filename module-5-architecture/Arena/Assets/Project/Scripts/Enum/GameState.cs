@@ -3,5 +3,6 @@
     Init,
     Playing,
     Win,
-    Paused
+    Paused,
+    Lose
 }

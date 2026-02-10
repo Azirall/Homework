@@ -15,4 +15,8 @@ public class InputSystem : MonoBehaviour
     {
         LookInput = value.Get<Vector2>();
     }
+    public void OnCancel(InputValue value)
+    {
+        EventBus.RaiseGameEvent(new GameTriggerEvent(GameTrigger.PauseButtonPressed));
+    }
 }

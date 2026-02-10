@@ -1,46 +1,28 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-public sealed class SpawnService : IDisposable
+public sealed class SpawnService
 {
     private readonly SpawnServiceContext _context;
 
     public SpawnService(SpawnServiceContext context)
     {
         _context = context;
-        EventBus.OnGameEvent += HandleEvent;
     }
 
-    private void HandleEvent(IGameEvent e)
+    public void CreateObjectsInPool()
     {
-        if (e is not GameStateChanged s) return;
-
-        switch (s.GameState)
-        {
-            case GameState.Init:
-                _context.Pool.WarmupEnemy(_context.GameConfig.MaxEnemy);
-                _context.Pool.WarmupItem(_context.LootConfig.LootItemAmount);
-                break;
-
-            case GameState.Playing:
-                StartSpawning();
-                break;
-
-            case GameState.Paused:
-            case GameState.Win:
-                StopSpawning();
-                break;
-        }
+        _context.Pool.WarmupEnemy(_context.GameConfig.MaxEnemy);
+        _context.Pool.WarmupItem(_context.LootConfig.LootItemAmount);
     }
 
-    private void StartSpawning()
+    public void StartSpawning()
     {
         _context.Runner.StartCoroutine(EnemySpawnCoroutine());
         _context.Runner.StartCoroutine(ItemSpawnCoroutine());
     }
 
-    private void StopSpawning()
+    public void StopSpawning()
     {
         _context.Runner.StopAllCoroutines();
     }
@@ -101,11 +83,5 @@ public sealed class SpawnService : IDisposable
         item.Init(() => _context.Pool.ReturnItem(itemObj));
         
         itemObj.SetActive(true);
-    }
-
-    public void Dispose()
-    {
-        StopSpawning();
-        EventBus.OnGameEvent -= HandleEvent;
     }
 }

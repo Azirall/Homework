@@ -1,13 +1,14 @@
-﻿using UnityEngine;
-
-public class GameStateService
+﻿public class GameStateService
 {
+    private GameStateMachine _stateMachine;
     private int _currentScore;
     private int _targetScore;
 
-    public GameStateService(GameConfig gameConfig)
+    private bool _gameIsPaused;
+    public GameStateService(GameConfig gameConfig, GameStateMachine stateMachine)
     {
         _targetScore = gameConfig.TargetScore;
+        _stateMachine = stateMachine;
     }
 
     public void Init()
@@ -23,16 +24,37 @@ public class GameStateService
             _currentScore++;
             EventBus.RaiseGameEvent(new ScoreChanged(_currentScore));
         }
+
+        if (gameEvent is GameTriggerEvent trigger)
+        {
+            switch (trigger.GameTriggerType)
+            {
+                case GameTrigger.PauseButtonPressed:
+                    TogglePause();
+                    break;
+            }
+        }
+    }
+
+    private void TogglePause()
+    {
+        if (_gameIsPaused)
+        {
+            _stateMachine.SetState(GameState.Playing);
+            EventBus.RaiseGameEvent(new GameStateChanged(GameState.Playing));
+            _gameIsPaused = false;
+        }
+        else
+        {
+            _stateMachine.SetState(GameState.Paused);
+            EventBus.RaiseGameEvent(new GameStateChanged(GameState.Paused));
+            _gameIsPaused = true;
+        }
     }
 
     public void StartGame()
     {
-        EventBus.RaiseGameEvent(new GameStateChanged(GameState.Playing));
-    }
-
-    public void PauseGame()
-    {
-        EventBus.RaiseGameEvent(new GameStateChanged(GameState.Paused));
+        _stateMachine.SetState(GameState.Playing);
     }
     
 }

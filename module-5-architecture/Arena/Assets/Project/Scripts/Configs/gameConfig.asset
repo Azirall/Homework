@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec2570b4d0884d95ae28cc8aa19e165a, type: 3}
   m_Name: gameConfig
   m_EditorClassIdentifier: 
-  _playerSpeed: 5
+  _playerSpeed: 4
   _enemyRespawnTime: 3
   _maxEnemy: 5
   _targetScore: 10
