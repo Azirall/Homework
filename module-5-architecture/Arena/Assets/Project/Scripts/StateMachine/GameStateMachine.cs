@@ -11,8 +11,8 @@ public class GameStateMachine
          InitState initState = new InitState(spawnService);
          PlayingState playingState = new PlayingState(spawnService);
          PausedState pausedState = new PausedState(spawnService);
-         WinState winState = new WinState();
-         LoseState loseState = new LoseState();
+         WinState winState = new WinState(spawnService);
+         LoseState loseState = new LoseState(spawnService);
          
          _states.Add(GameState.Init, initState);
          _states.Add(GameState.Paused, pausedState);

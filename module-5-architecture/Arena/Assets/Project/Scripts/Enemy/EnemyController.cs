@@ -32,9 +32,7 @@ public class EnemyController : MonoBehaviour
     IEnumerator DieCoroutine(float second)
     {
         yield return new WaitForSeconds(second);
-        EventBus.RaiseGameEvent(new EnemyDestroyed());
-        _returnAction();
-        
+        _returnAction?.Invoke();
         _returnAction = null;
     }
 
@@ -42,8 +40,8 @@ public class EnemyController : MonoBehaviour
     {
         if (collision2D.gameObject.CompareTag("Player"))
         {
-            EventBus.RaiseGameEvent(new EnemyDestroyed());
-            _returnAction();
+            EventBus.RaiseGameEvent(new PlayerDamaged());
+            _returnAction?.Invoke();
         }
     }
 }

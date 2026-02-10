@@ -2,6 +2,6 @@
 {
     PlayerWin,
     PlayerLose,
-    RestartButtonPressed,
-    PauseButtonPressed
+    PauseButtonPressed,
+    RestartButtonPressed
 }

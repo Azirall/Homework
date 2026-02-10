@@ -19,8 +19,8 @@ public class EventLogger
             case EnemySpawned:
                 Log("EnemySpawned", "Enemy has spawned.");
                 break;
-            case EnemyDestroyed:
-                Log("EnemyDestroyed", "Enemy has been destroyed.");
+            case PlayerDamaged:
+                Log("PlayerDamaged", "Player received 1 damage.");
                 break;
             case ItemPicked:
                 Log("ItemPicked", "Item has been picked up.");

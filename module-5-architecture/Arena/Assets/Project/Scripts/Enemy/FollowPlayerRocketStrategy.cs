@@ -4,6 +4,7 @@ public class FollowPlayerRocketStrategy : IRocketStrategy
 {
         private readonly Transform _playerTransform;
         private Rigidbody2D _rocketRb;
+        
         private float _speed;
         public FollowPlayerRocketStrategy(Transform playerTransform, float moveSpeed)
         {
