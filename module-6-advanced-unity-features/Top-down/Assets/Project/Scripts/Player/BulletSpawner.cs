@@ -6,7 +6,7 @@ public class BulletSpawner : MonoBehaviour
         
         public void SpawnBullet(float speed)
         {
-          GameObject bullet = Instantiate(_bulletPrefab, transform.position, transform.rotation);
+          GameObject bullet = Instantiate(_bulletPrefab, transform.position, _bulletPrefab.transform.rotation);
           
           Rigidbody rb = bullet.GetComponent<Rigidbody>();
           

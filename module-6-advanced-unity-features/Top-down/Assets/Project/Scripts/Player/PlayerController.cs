@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Move();
+        LookAtCursor();
     }
 
     private void Move()
@@ -28,5 +29,20 @@ public class PlayerController : MonoBehaviour
         }
 
         _characterController.Move(moveDirection * (_gameConfig.PlayerSpeed* Time.fixedDeltaTime));
+    }
+
+    private void LookAtCursor()
+    {
+        Vector2 mousePos = _inputSystem.MousePosition;
+        
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        {
+            Vector3 targetPoint = hit.point;
+            
+            targetPoint.y = transform.position.y; 
+            
+            transform.LookAt(targetPoint);
+        }
     }
 }

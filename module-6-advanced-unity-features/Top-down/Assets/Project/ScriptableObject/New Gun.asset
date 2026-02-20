@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f59981c0a6484aba5c46389709f833, type: 3}
   m_Name: New Gun
   m_EditorClassIdentifier: 
-  _reloadTime: 0.2
-  _bulletSpeed: 10
-  _bulletPrefab: {fileID: 131581695516554716, guid: f54329a17f0ad4644bdabb10c84c487d, type: 3}
+  _reloadTime: 1
+  _bulletSpeed: 20
+  _bulletPrefab: {fileID: 4873030107427571308, guid: f54329a17f0ad4644bdabb10c84c487d, type: 3}
