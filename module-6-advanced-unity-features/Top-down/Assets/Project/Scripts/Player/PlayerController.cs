@@ -21,11 +21,11 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        Vector3 moveDirection = new Vector3(_inputSystem.MoveInput.x,0 ,_inputSystem.MoveInput.y).normalized;
+        Vector3 moveDirection = Vector3.forward * _inputSystem.MoveInput.y + Vector3.right * _inputSystem.MoveInput.x;
         
-        if (_characterController.velocity.y >= 0)
+        if (!_characterController.isGrounded)
         {
-            moveDirection = new Vector3(_inputSystem.MoveInput.x,-_gameConfig.Gravity,_inputSystem.MoveInput.y);
+            moveDirection.y = -2f;
         }
 
         _characterController.Move(moveDirection * (_gameConfig.PlayerSpeed* Time.fixedDeltaTime));

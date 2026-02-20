@@ -6,7 +6,8 @@ public class Bootstrap : MonoBehaviour
     [SerializeField] private SceneContext _sceneContext;
     [SerializeField] private GameConfig _gameConfig;
     [SerializeField] private GunConfig _gunData;
-    
+
+    [SerializeField] private EnemyController _enemyController;
     private PlayerFacade _playerFacade;
     
     private InputSystem InputSystem => _sceneContext.InputSystem;
@@ -16,6 +17,8 @@ public class Bootstrap : MonoBehaviour
         PlayerGun playerGun = _sceneContext.PlayerGun;
         PlayerHealth playerHealth = new();
 
+        _enemyController.Init(()  => playerController.transform.position);
+        
         playerController.Init(InputSystem,_gameConfig);
         playerGun.Init(InputSystem,_gunData);
         

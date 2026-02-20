@@ -6,11 +6,11 @@ public class BulletSpawner : MonoBehaviour
         
         public void SpawnBullet(float speed)
         {
-          GameObject bullet = Instantiate(_bulletPrefab, transform.position, _bulletPrefab.transform.rotation);
+          GameObject bullet = Instantiate(_bulletPrefab,  transform.position, transform.rotation);
           
           Rigidbody rb = bullet.GetComponent<Rigidbody>();
           
-          rb.AddForce(transform.forward * speed, ForceMode.Impulse);
+          rb.velocity = transform.forward * speed;
         }
 
         public void SetBulletPrefab(GameObject prefab)
