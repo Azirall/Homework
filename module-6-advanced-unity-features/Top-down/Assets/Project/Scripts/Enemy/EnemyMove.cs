@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class EnemyMove : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent _agent;
     
@@ -13,7 +13,6 @@ public class EnemyController : MonoBehaviour
         _getTargetPosition = getPlayerTransform;
 
     }
-
     private void Update()
     {
         if (_getTargetPosition == null) return;

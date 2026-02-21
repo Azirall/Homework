@@ -1,28 +1,31 @@
-using System;
 using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
 {
     [SerializeField] private SceneContext _sceneContext;
+    [SerializeField] private UiContext _uiContext;
     [SerializeField] private GameConfig _gameConfig;
     [SerializeField] private GunConfig _gunData;
-
-    [SerializeField] private EnemyController _enemyController;
-    private PlayerFacade _playerFacade;
-    
     private InputSystem InputSystem => _sceneContext.InputSystem;
     private void Awake()
     {
         PlayerController playerController = _sceneContext.PlayerController;
+        EnemyFactory factory = _sceneContext.EnemyFactory;
         PlayerGun playerGun = _sceneContext.PlayerGun;
-        PlayerHealth playerHealth = new();
-
-        _enemyController.Init(()  => playerController.transform.position);
+        EventBus eventBus = new();
         
+        factory.Init(() => playerController.transform.position);
         playerController.Init(InputSystem,_gameConfig);
-        playerGun.Init(InputSystem,_gunData);
+        playerGun.Init(InputSystem);
         
-        _playerFacade = new PlayerFacade(playerController, playerGun, playerHealth);
+        
+        foreach (IEventConsumer consumer in _uiContext.EventConsumers)
+        {
+            consumer.Subscribe(eventBus);
+        }
+        
+        GameDirector gameDirector = new GameDirector(eventBus, _gameConfig);
+        WaveManager waveManager = new WaveManager(_gameConfig, eventBus, factory,this);
     }
 
     private void OnValidate()
@@ -40,6 +43,11 @@ public class Bootstrap : MonoBehaviour
         if (_gunData == null)
         {
             Debug.LogError("GunConfig in Bootstrap is null");
+        }
+
+        if (_uiContext == null)
+        {
+            Debug.LogError("UiContext in Bootstrap is null");
         }
     }
 }

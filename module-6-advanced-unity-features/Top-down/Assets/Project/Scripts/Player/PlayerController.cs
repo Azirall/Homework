@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
             moveDirection.y = -2f;
         }
 
-        _characterController.Move(moveDirection * (_gameConfig.PlayerSpeed* Time.fixedDeltaTime));
+        _characterController.Move(moveDirection * (_gameConfig.PlayerSpeed* Time.deltaTime));
     }
 
     private void LookAtCursor()

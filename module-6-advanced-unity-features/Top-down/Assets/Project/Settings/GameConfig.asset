@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f826393d7124752a4501d83da3ca18d, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  _playerSpeed: 1.47
-  _gravity: 1
+  _playerSpeed: 5
+  _scoreForWin: 10
+  _timeToNewWave: 20
+  _spawnDelay: 0.5
+  _enemiesInWave: 5
