@@ -12,14 +12,16 @@ public class Bootstrap : MonoBehaviour
         PlayerController playerController = _sceneContext.PlayerController;
         EnemyFactory factory = _sceneContext.EnemyFactory;
         PlayerGun playerGun = _sceneContext.PlayerGun;
-        EventBus eventBus = new();
         
-        factory.Init(() => playerController.transform.position);
+        EventBus eventBus = new();
+        PlayerHealth playerHealth = new PlayerHealth(10, eventBus);
+        
+        factory.Init(() => playerController.transform.position,eventBus);
         playerController.Init(InputSystem,_gameConfig);
         playerGun.Init(InputSystem);
         
         
-        foreach (IEventConsumer consumer in _uiContext.EventConsumers)
+        foreach (IEventUser consumer in _uiContext.EventConsumers)
         {
             consumer.Subscribe(eventBus);
         }

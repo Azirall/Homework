@@ -1,4 +1,7 @@
 ﻿public enum TriggerType
 {
-    EnemyKilled
+    EnemyKilled,
+    PauseButtonPressed,
+    PlayerDamaged,
+    PlayerKilled
 }

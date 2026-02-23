@@ -6,8 +6,7 @@ public class WaveManager
     private EnemyFactory _enemyFactory;
     private GameConfig _gameConfig;
     private EventBus _eventBus;
-        
-    private int _currentWave = 0;
+    
     private MonoBehaviour _runner;
 
     public WaveManager(GameConfig gameConfig, EventBus eventBus, EnemyFactory factory, MonoBehaviour runner)

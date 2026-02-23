@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class UiContext : MonoBehaviour
 {
-    [SerializeField] private Transform _uiRoot;
-    private List<IEventConsumer> _eventConsumers = new();
+    [SerializeField] private List<Transform> _uiRoots = new List<Transform>();
+    private List<IEventUser> _eventConsumers = new();
     
-    public IReadOnlyList<IEventConsumer> EventConsumers => _eventConsumers;
+    public IReadOnlyList<IEventUser> EventConsumers => _eventConsumers;
     private void OnValidate()
     {
-        _eventConsumers.AddRange(_uiRoot.GetComponentsInChildren<IEventConsumer>());
+        foreach (var uiRoot in _uiRoots)
+        {
+            _eventConsumers.AddRange(uiRoot.GetComponentsInChildren<IEventUser>());
+        }
     }
 }

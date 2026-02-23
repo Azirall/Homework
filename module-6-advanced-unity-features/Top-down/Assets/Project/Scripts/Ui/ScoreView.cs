@@ -3,7 +3,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class ScoreView : MonoBehaviour, IEventConsumer
+public class ScoreView : MonoBehaviour, IEventUser
 {
     [SerializeField] private TextMeshProUGUI _scoreText;
     private EventBus _eventBus;

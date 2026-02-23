@@ -1,24 +1,18 @@
-
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyMove : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent _agent;
-    
-    private Func<Vector3> _getTargetPosition;
-    public void Init(Func<Vector3> getPlayerTransform)
+    public void MoveTo(Vector3 destination)
     {
-        _getTargetPosition = getPlayerTransform;
-
+        _agent.isStopped = false;
+        _agent.SetDestination(destination);
     }
-    private void Update()
+
+    public void Stop()
     {
-        if (_getTargetPosition == null) return;
-        
-        Vector3 targetPos = _getTargetPosition.Invoke();
-        _agent.SetDestination(targetPos);
+        _agent.isStopped = true;
     }
 
     private void OnValidate()

@@ -1,4 +1,6 @@
-﻿public class GameDirector
+﻿using UnityEngine.SceneManagement;
+
+public class GameDirector
 {
     private int _currentScore = 0;
     private EventBus _eventBus;
@@ -14,6 +16,11 @@
         {
             _currentScore++;
             _eventBus.RaiseGameEvent(new ScoreChanged(_currentScore.ToString()));
+        }
+
+        if (gameEvent is EventTrigger { TriggerType: TriggerType.PauseButtonPressed } or EventTrigger {TriggerType: TriggerType.PlayerKilled})
+        {
+           SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

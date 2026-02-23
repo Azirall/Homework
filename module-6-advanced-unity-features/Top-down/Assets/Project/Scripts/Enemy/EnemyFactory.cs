@@ -11,10 +11,11 @@ public class EnemyFactory : MonoBehaviour
 
     
     private Func<Vector3> _playerPosDelegate;
-    
-    public void Init(Func<Vector3> playerPosDelegate)
+    private EventBus _eventBus;
+    public void Init(Func<Vector3> playerPosDelegate, EventBus eventBus)
     {
         _playerPosDelegate = playerPosDelegate;
+        _eventBus = eventBus;
     }
 
     public void CreateEnemy( Action enemyKilledAction)
@@ -25,10 +26,10 @@ public class EnemyFactory : MonoBehaviour
             GameObject enemy = Instantiate(_enemyPrefab, spawnPos, Quaternion.identity);
                 
             EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-            EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
-                
+            EnemyBrain enemyBrain = enemy.GetComponent<EnemyBrain>();
+            
             enemyHealth.SetKilledAction(enemyKilledAction);
-            enemyMove.Init(_playerPosDelegate);
+            enemyBrain.Init(_playerPosDelegate, _eventBus);
         }
     private void OnValidate()
     {
