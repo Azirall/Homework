@@ -3,18 +3,34 @@ using UnityEngine;
 public class PlayerGun : MonoBehaviour
 {
     [SerializeField] private BulletSpawner _bulletSpawner;
-    [SerializeField] private GunConfig _gunData;
-    
     private InputSystem _inputSystem;
+    private GunConfig _gunData;
     private GunLogic _gunLogic; 
-
-    public void Init(InputSystem inputSystem)
+    private EventBus _eventBus;
+    public void Init(InputSystem inputSystem,EventBus eventBus, GunConfig gunData)
     {
         _inputSystem = inputSystem;
+        _eventBus = eventBus;
         
-        _gunLogic = new GunLogic(_gunData);
+        _eventBus.OnGameEvent += HandleEvent;
         
-        _bulletSpawner.SetBulletPrefab(_gunData.BulletPrefab);
+        _gunData = gunData;
+        SetGun(gunData);
+    }
+
+    private void HandleEvent(IGameEvent gameEvent)
+    {
+        if (gameEvent is GunChanged gunChangedEvent)
+        {
+            SetGun(gunChangedEvent.GunConfig);
+        }
+    }
+
+    private void SetGun(GunConfig gunData)
+    {
+        _gunData = gunData;
+        _gunLogic = new GunLogic(gunData);
+        _bulletSpawner.SetBulletPrefab(gunData.BulletPrefab);
     }
 
     private void Update()

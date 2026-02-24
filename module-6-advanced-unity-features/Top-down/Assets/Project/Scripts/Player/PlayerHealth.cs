@@ -1,9 +1,11 @@
-﻿
-public class PlayerHealth 
+using System;
+
+public class PlayerHealth : IDisposable
 {
     private int _currentHealth;
     private int _maxHealth;
-    private readonly EventBus _eventBus;
+    private EventBus _eventBus;
+
     public PlayerHealth(int maxHealth, EventBus eventBus)
     {
         _eventBus = eventBus;
@@ -26,5 +28,16 @@ public class PlayerHealth
                 _eventBus.RaiseGameEvent(new EventTrigger(TriggerType.PlayerKilled));
             }
         }
+    }
+
+    public void Dispose()
+    {
+        if (_eventBus == null)
+        {
+            return;
+        }
+
+        _eventBus.OnGameEvent -= HandleEvent;
+        _eventBus = null;
     }
 }

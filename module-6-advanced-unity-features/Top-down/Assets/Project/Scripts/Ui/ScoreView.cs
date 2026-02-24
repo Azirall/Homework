@@ -1,5 +1,3 @@
-
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,6 +10,17 @@ public class ScoreView : MonoBehaviour, IEventUser
     {
         _eventBus = eventBus;
         _eventBus.OnGameEvent += HandleEvent;
+    }
+
+    public void Unsubscribe()
+    {
+        if (_eventBus == null)
+        {
+            return;
+        }
+
+        _eventBus.OnGameEvent -= HandleEvent;
+        _eventBus = null;
     }
 
     private void HandleEvent(IGameEvent gameEvent)
@@ -28,6 +37,6 @@ public class ScoreView : MonoBehaviour, IEventUser
 
     private void OnDestroy()
     {
-        _eventBus.OnGameEvent += HandleEvent;
+        Unsubscribe();
     }
 }
