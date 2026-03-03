@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f59981c0a6484aba5c46389709f833, type: 3}
   m_Name: Rifle
   m_EditorClassIdentifier: 
-  _reloadTime: 0.2
+  _spread: 1
+  _fireRate: 0.2
+  _reloadTime: 4
+  _magazineSize: 30
   _bulletSpeed: 50
   _bulletPrefab: {fileID: 4873030107427571308, guid: f54329a17f0ad4644bdabb10c84c487d, type: 3}
-  _type: 1

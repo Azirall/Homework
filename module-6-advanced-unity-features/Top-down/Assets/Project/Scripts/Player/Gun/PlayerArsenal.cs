@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class PlayerArsenal : IDisposable
 {
-    private Dictionary<GunType, GunConfig> _gunConfigs = new();
+    private readonly List<GunConfig> _gunConfigs = new();
     private EventBus _eventBus;
     
     public PlayerArsenal(IReadOnlyList<GunConfig> configs, EventBus eventBus)
     {
         foreach (var config in configs)
         {
-            GunType type = config.Type;
-            _gunConfigs.Add(type, config);
+            _gunConfigs.Add(config);
         }
         _eventBus = eventBus;
         _eventBus.OnGameEvent += HandleEvent;
@@ -22,17 +21,14 @@ public class PlayerArsenal : IDisposable
     {
         if (gameEvent is GunChangeButtonPressed buttonEvent)
         {
-            Debug.Log(buttonEvent.Index);
+            GunConfig config = _gunConfigs[buttonEvent.Index-1];
+            
+            _eventBus.RaiseGameEvent(new GunChanged(config));
         }
     }
     public GunConfig GetDefaultGun()
     {
-        return TryGetGun(GunType.Pistol);
-    }
-    private GunConfig TryGetGun(GunType type)
-    {
-        _gunConfigs.TryGetValue(type, out var config);
-        return config;
+        return _gunConfigs[0];
     }
 
     public void Dispose()

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WaveManager : IDisposable
 {
-    private EnemyFactory _enemyFactory;
-    private GameConfig _gameConfig;
+    private readonly EnemyFactory _enemyFactory;
+    private readonly GameConfig _gameConfig;
     private EventBus _eventBus;
-    private MonoBehaviour _runner;
+    private readonly MonoBehaviour _runner;
     private Coroutine _spawnCoroutine;
     private bool _isSpawnStarted;
 

@@ -46,6 +46,10 @@ public class GameCompositionRoot : IDisposable
         }
 
         _eventBus = new EventBus();
+        
+        _uiInitializer = new UiInitializer(_uiContext, _gunContext, _eventBus);
+        _uiInitializer.Init();
+        
         _playerHealth = new PlayerHealth(10, _eventBus);
         _playerArsenal = new PlayerArsenal(_gunContext.GetConfigs(), _eventBus);
 
@@ -53,9 +57,7 @@ public class GameCompositionRoot : IDisposable
         _playerInitializer.Init();
 
         factory.Init(() => playerController != null ? playerController.transform.position : Vector3.zero, _eventBus);
-
-        _uiInitializer = new UiInitializer(_uiContext, _gunContext, _eventBus);
-        _uiInitializer.Init();
+        
 
         _gameDirector = new GameDirector(_eventBus, _gameConfig);
         _waveManager = new WaveManager(_gameConfig, _eventBus, factory, _runner);
