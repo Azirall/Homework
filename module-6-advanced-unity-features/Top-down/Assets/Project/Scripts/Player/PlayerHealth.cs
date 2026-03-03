@@ -3,7 +3,7 @@ using System;
 public class PlayerHealth : IDisposable
 {
     private int _currentHealth;
-    private int _maxHealth;
+    private readonly int _maxHealth;
     private EventBus _eventBus;
 
     public PlayerHealth(int maxHealth, EventBus eventBus)

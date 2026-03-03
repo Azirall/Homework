@@ -4,7 +4,9 @@ using UnityEngine;
 public class MenuView : MonoBehaviour, IEventUser
 {
     [SerializeField] private GameObject _menuRoot;
-    [SerializeField] private GameObject _menuActionButton;
+    [SerializeField] private GameObject _menuContinueButton;
+    [SerializeField] private GameObject _startButton;
+    [SerializeField] private GameObject _restartButton;
     [SerializeField] private TextMeshProUGUI _stateText;
     private EventBus _eventBus;
 
@@ -27,50 +29,12 @@ public class MenuView : MonoBehaviour, IEventUser
 
     private void HandleEvent(IGameEvent gameEvent)
     {
-        if (_menuRoot == null)
+        if (gameEvent is not GameStateChanged stateChanged)
         {
             return;
         }
 
-        if (gameEvent is GameStateChanged { State: GameStateType.Start })
-        {
-            _menuRoot.SetActive(true);
-            SetMenuActionButtonVisible(false);
-            SetStateText(string.Empty);
-            return;
-        }
-
-        if (gameEvent is GameStateChanged { State: GameStateType.Playing })
-        {
-            _menuRoot.SetActive(false);
-            SetMenuActionButtonVisible(true);
-            SetStateText(string.Empty);
-            return;
-        }
-
-        if (gameEvent is GameStateChanged { State: GameStateType.Pause })
-        {
-            _menuRoot.SetActive(true);
-            SetMenuActionButtonVisible(true);
-            SetStateText("Pause");
-            return;
-        }
-
-        if (gameEvent is GameStateChanged { State: GameStateType.Win } ||
-            gameEvent is GameStateChanged { State: GameStateType.Lose })
-        {
-            _menuRoot.SetActive(true);
-            SetMenuActionButtonVisible(false);
-            SetStateText(gameEvent is GameStateChanged { State: GameStateType.Win } ? "Win" : "Lose");
-        }
-    }
-
-    private void SetMenuActionButtonVisible(bool isVisible)
-    {
-        if (_menuActionButton != null)
-        {
-            _menuActionButton.SetActive(isVisible);
-        }
+        UpdateView(stateChanged.State);
     }
 
     private void SetStateText(string text)
@@ -81,8 +45,82 @@ public class MenuView : MonoBehaviour, IEventUser
         }
     }
 
+    private void UpdateView(GameStateType state)
+    {
+        switch (state)
+        {
+            case GameStateType.Start:
+                _menuRoot.SetActive(true);
+                _menuContinueButton.SetActive(false);
+                _startButton.SetActive(true);
+                _restartButton.SetActive(false);
+                SetStateText("New game");
+                break;
+
+            case GameStateType.Playing:
+                _menuRoot.SetActive(false);
+                _menuContinueButton.SetActive(false);
+                _startButton.SetActive(false);
+                _restartButton.SetActive(false);
+                SetStateText(string.Empty);
+                break;
+
+            case GameStateType.Pause:
+                _menuRoot.SetActive(true);
+                _menuContinueButton.SetActive(true);
+                _startButton.SetActive(false);
+                _restartButton.SetActive(true);
+                SetStateText("Pause");
+                break;
+
+            case GameStateType.Win:
+                _menuRoot.SetActive(true);
+                _menuContinueButton.SetActive(false);
+                _startButton.SetActive(false);
+                _restartButton.SetActive(true);
+                SetStateText("Win");
+                break;
+
+            case GameStateType.Lose:
+                _menuRoot.SetActive(true);
+                _menuContinueButton.SetActive(false);
+                _startButton.SetActive(false);
+                _restartButton.SetActive(true);
+                SetStateText("Lose");
+                break;
+        }
+    }
+
     private void OnDestroy()
     {
         Unsubscribe();
+    }
+
+    private void OnValidate()
+    {
+        if (_menuRoot == null)
+        {
+            Debug.LogError($"MenuView: menu root is not assigned on {name}");
+        }
+
+        if (_menuContinueButton == null)
+        {
+            Debug.LogError($"MenuView: continue button is not assigned on {name}");
+        }
+
+        if (_startButton == null)
+        {
+            Debug.LogError($"MenuView: start button is not assigned on {name}");
+        }
+
+        if (_restartButton == null)
+        {
+            Debug.LogError($"MenuView: restart button is not assigned on {name}");
+        }
+
+        if (_stateText == null)
+        {
+            Debug.LogError($"MenuView: state text is not assigned on {name}");
+        }
     }
 }

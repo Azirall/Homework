@@ -40,13 +40,19 @@ public class InputSystem : MonoBehaviour
         _eventBus.RaiseGameEvent(new MenuButtonPressed(MenuButtonType.PausePressed));
     }
 
-    public void OnQuickSlot(InputAction.CallbackContext context)
+    public void OnQuickSlot(InputValue value)
     {
-        Key key = ((KeyControl)context.control).keyCode;
+        var keyboard = Keyboard.current;
         
-        int slotIndex = (int)key - (int)Key.Digit1 + 1;
-        
-        _eventBus.RaiseGameEvent(new GunChangeButtonPressed(slotIndex));
+        for (int i = (int)Key.Digit1; i <= (int)Key.Digit9; i++)
+        {
+            if (keyboard[(Key)i].wasPressedThisFrame)
+            {
+                int slotIndex = i - (int)Key.Digit1 + 1;
+            
+                _eventBus.RaiseGameEvent(new GunChangeButtonPressed(slotIndex));
+            }
+        }
     }
 
     private void OnDestroy()

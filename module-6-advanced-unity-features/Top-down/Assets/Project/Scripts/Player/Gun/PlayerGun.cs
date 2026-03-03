@@ -4,18 +4,16 @@ public class PlayerGun : MonoBehaviour
 {
     [SerializeField] private BulletSpawner _bulletSpawner;
     private InputSystem _inputSystem;
-    private GunConfig _gunData;
     private GunLogic _gunLogic; 
     private EventBus _eventBus;
-    public void Init(InputSystem inputSystem,EventBus eventBus, GunConfig gunData)
+    public void Init(InputSystem inputSystem,EventBus eventBus, GunConfig defaultGun)
     {
         _inputSystem = inputSystem;
         _eventBus = eventBus;
         
         _eventBus.OnGameEvent += HandleEvent;
         
-        _gunData = gunData;
-        SetGun(gunData);
+        SetGun(defaultGun);
     }
 
     private void HandleEvent(IGameEvent gameEvent)
@@ -28,20 +26,18 @@ public class PlayerGun : MonoBehaviour
 
     private void SetGun(GunConfig gunData)
     {
-        _gunData = gunData;
-        _gunLogic = new GunLogic(gunData);
-        _bulletSpawner.SetBulletPrefab(gunData.BulletPrefab);
+        WeaponMagazine magazine = new(gunData, _eventBus, this);
+        _gunLogic = new GunLogic(magazine, gunData);
+        _bulletSpawner.InitBullet(gunData.BulletPrefab,gunData.BulletSpeed);
     }
 
     private void Update()
     {
         if (!_inputSystem.FireButtonPressed) return;
         
-        if (_gunLogic.CanFire(Time.time))
+        if (_gunLogic.TryShoot())
         {
-            _bulletSpawner.SpawnBullet(_gunData.BulletSpeed);
-            
-            _gunLogic.RegisterShot(Time.time);
+            _bulletSpawner.SpawnBullet();
         }
     }
     private void OnValidate()
