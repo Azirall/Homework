@@ -290,7 +290,7 @@
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "QuickSlot",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -301,7 +301,7 @@
                     "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "QuickSlot",
                     "isComposite": false,
                     "isPartOfComposite": false

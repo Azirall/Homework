@@ -20,7 +20,10 @@ public class PlayerArsenal : IDisposable
 
     private void HandleEvent(IGameEvent gameEvent)
     {
-        
+        if (gameEvent is GunChangeButtonPressed buttonEvent)
+        {
+            Debug.Log(buttonEvent.Index);
+        }
     }
     public GunConfig GetDefaultGun()
     {

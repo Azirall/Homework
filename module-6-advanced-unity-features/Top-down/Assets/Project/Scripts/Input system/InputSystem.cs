@@ -46,7 +46,7 @@ public class InputSystem : MonoBehaviour
         
         int slotIndex = (int)key - (int)Key.Digit1 + 1;
         
-        
+        _eventBus.RaiseGameEvent(new GunChangeButtonPressed(slotIndex));
     }
 
     private void OnDestroy()
