@@ -10,6 +10,8 @@ public class WaveManager : IDisposable
     private readonly MonoBehaviour _runner;
     private Coroutine _spawnCoroutine;
     private bool _isSpawnStarted;
+    private int _wavesRemaining;
+    private int _currentEnemiesInWave;
 
     public WaveManager(GameConfig gameConfig, EventBus eventBus, EnemyFactory factory, MonoBehaviour runner)
     {
@@ -36,21 +38,26 @@ public class WaveManager : IDisposable
         }
 
         _isSpawnStarted = true;
-        _spawnCoroutine = _runner.StartCoroutine(StartWaveSpawn());
+        _wavesRemaining = _gameConfig.WavesCount;
+        StartNextWave();
     }
 
-    private void EnemyKilled()
+    private void StartNextWave()
     {
-        _eventBus.RaiseGameEvent(new EventTrigger(TriggerType.EnemyKilled));
-    }
-
-    private IEnumerator StartWaveSpawn()
-    {
-        while (true)
+        if (_wavesRemaining <= 0 || _runner == null)
         {
-            _runner.StartCoroutine(SpawnEnemyCoroutine());
-            yield return new WaitForSeconds(_gameConfig.TimeToNewWave);
+            return;
         }
+
+        _wavesRemaining--;
+        _currentEnemiesInWave = _gameConfig.EnemiesInWave;
+
+        if (_spawnCoroutine != null)
+        {
+            _runner.StopCoroutine(_spawnCoroutine);
+        }
+
+        _spawnCoroutine = _runner.StartCoroutine(SpawnEnemyCoroutine());
     }
 
     private IEnumerator SpawnEnemyCoroutine()
@@ -59,6 +66,17 @@ public class WaveManager : IDisposable
         {
             _enemyFactory.CreateEnemy(EnemyKilled);
             yield return new WaitForSeconds(_gameConfig.SpawnDelay);
+        }
+    }
+
+    private void EnemyKilled()
+    {
+        _currentEnemiesInWave--;
+
+        if (_currentEnemiesInWave <= 0)
+        {
+            _eventBus.RaiseGameEvent(new WaveDestroyed());
+            StartNextWave();
         }
     }
 

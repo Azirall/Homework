@@ -57,10 +57,9 @@ public class GameCompositionRoot : IDisposable
         _playerInitializer.Init();
 
         factory.Init(() => playerController != null ? playerController.transform.position : Vector3.zero, _eventBus);
-        
 
-        _gameDirector = new GameDirector(_eventBus, _gameConfig);
         _waveManager = new WaveManager(_gameConfig, _eventBus, factory, _runner);
+        _gameDirector = new GameDirector(_eventBus, _gameConfig);
     }
 
     public void Dispose()
