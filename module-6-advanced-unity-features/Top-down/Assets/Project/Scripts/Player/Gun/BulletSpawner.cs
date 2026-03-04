@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
@@ -6,13 +6,15 @@ public class BulletSpawner : MonoBehaviour
         private float _bulletSpeed;
     
 
-        public void SpawnBullet()
+        public void SpawnBullet(Vector3 direction)
         {
-          GameObject bullet = Instantiate(_bulletPrefab,  transform.position, transform.rotation);
+          direction = direction.normalized;
+
+          GameObject bullet = Instantiate(_bulletPrefab,  transform.position, Quaternion.LookRotation(direction));
           
           Rigidbody rb = bullet.GetComponent<Rigidbody>();
           
-          rb.velocity = transform.forward * _bulletSpeed;
+          rb.velocity = direction * _bulletSpeed;
         }
 
         public void InitBullet(GameObject prefab, float speed)

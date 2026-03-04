@@ -6,6 +6,7 @@ public class PlayerGun : MonoBehaviour
     private InputSystem _inputSystem;
     private GunLogic _gunLogic; 
     private EventBus _eventBus;
+    private WeaponSpread _weaponSpread;
     public void Init(InputSystem inputSystem,EventBus eventBus, GunConfig defaultGun)
     {
         _inputSystem = inputSystem;
@@ -29,6 +30,7 @@ public class PlayerGun : MonoBehaviour
         WeaponMagazine magazine = new(gunData, _eventBus, this);
         _gunLogic = new GunLogic(magazine, gunData);
         _bulletSpawner.InitBullet(gunData.BulletPrefab,gunData.BulletSpeed);
+        _weaponSpread = new WeaponSpread(gunData.Spread);
     }
 
     private void Update()
@@ -37,7 +39,9 @@ public class PlayerGun : MonoBehaviour
         
         if (_gunLogic.TryShoot())
         {
-            _bulletSpawner.SpawnBullet();
+            Vector3 baseDirection = transform.forward;
+            Vector3 spreadDirection = _weaponSpread.ApplySpread(baseDirection);
+            _bulletSpawner.SpawnBullet(spreadDirection);
         }
     }
     private void OnValidate()

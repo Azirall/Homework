@@ -59,7 +59,6 @@ public class GameDirector : IDisposable
             
         }
     }
-
     private void EnterState(GameStateType newState)
     {
         Debug.Log("Entered state: " + newState);

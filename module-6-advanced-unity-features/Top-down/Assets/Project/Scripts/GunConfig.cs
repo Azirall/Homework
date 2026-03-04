@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Player gun", fileName = "New Gun")]
 public class GunConfig : ScriptableObject
@@ -10,7 +11,7 @@ public class GunConfig : ScriptableObject
         [SerializeField] private float _bulletSpeed = 10f;
         [SerializeField] private GameObject _bulletPrefab;
         
-        public float Spread => Spread;
+        public float Spread => _spread;
         public float FireRate => _fireRate;
         public int MagazineSize => _magazineSize;
         public float ReloadTime => _reloadTime;
