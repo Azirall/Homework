@@ -1,9 +1,11 @@
+using System.Text;
 using TMPro;
 using UnityEngine;
 
 public class ScoreView : MonoBehaviour, IEventUser
 {
     [SerializeField] private TextMeshProUGUI _scoreText;
+    private readonly StringBuilder _textBuilder = new StringBuilder(32);
     private EventBus _eventBus;
     
     public void Subscribe(EventBus eventBus)
@@ -32,7 +34,10 @@ public class ScoreView : MonoBehaviour, IEventUser
     }
     private void UpdateText(string text)
     {
-        _scoreText.text = $"Score: {text}";
+        _textBuilder.Clear();
+        _textBuilder.Append("Score: ");
+        _textBuilder.Append(text);
+        _scoreText.text = _textBuilder.ToString();
     }
 
     private void OnDestroy()

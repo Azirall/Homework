@@ -24,6 +24,7 @@ public class GameCompositionRoot : IDisposable
         _gameConfig = gameConfig;
         _gunContext = gunContext;
         _runner = runner;
+        Debug.Log("GameCompositionRoot initialized");
     }
 
     public void Init()

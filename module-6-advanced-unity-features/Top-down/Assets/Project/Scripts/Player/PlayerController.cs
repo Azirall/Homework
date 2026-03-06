@@ -3,15 +3,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private CharacterController _characterController;
-    [SerializeField] private float _pushForce = 2.0f;
+    [SerializeField] private LayerMask _lookLayerMask;
+    [SerializeField] private LayerMask _interactionLayerMask;
     
     private GameConfig _gameConfig;
     private InputSystem _inputSystem;
+    private Camera _mainCamera;
     
     public void Init(InputSystem inputSystem, GameConfig gameConfig)
     {
         _inputSystem = inputSystem;
         _gameConfig = gameConfig;
+        _mainCamera = Camera.main;
     }
 
     private void Update()
@@ -36,8 +39,9 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 mousePos = _inputSystem.MousePosition;
         
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        Ray ray = _mainCamera.ScreenPointToRay(mousePos);
+        
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, _lookLayerMask))
         {
             Vector3 targetPoint = hit.point;
             
@@ -46,16 +50,5 @@ public class PlayerController : MonoBehaviour
             transform.LookAt(targetPoint);
         }
     }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody body = hit.collider.attachedRigidbody;
-        
-        if (body == null || body.isKinematic) return;
-        if (hit.moveDirection.y < -0.3f) return;
-        
-        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-        
-        body.AddForceAtPosition(pushDir * _pushForce, hit.point, ForceMode.Impulse);
-    }
+    
 }

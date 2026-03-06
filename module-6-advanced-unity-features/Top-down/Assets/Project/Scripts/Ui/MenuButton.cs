@@ -17,6 +17,8 @@ public class MenuButton : MonoBehaviour, IEventUser
 
     public void OnClick()
     {
+        Debug.Log($"MenuButton.OnClick: buttonType={_buttonType}, eventBusSet={_eventBus != null}");
+
         if (_eventBus == null)
         {
             return;
