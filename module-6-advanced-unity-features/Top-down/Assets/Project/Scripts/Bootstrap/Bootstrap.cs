@@ -13,16 +13,21 @@ public class Bootstrap : MonoBehaviour
 
     private GameCompositionRoot _compositionRoot;
 
-    private void Awake()
+    private void Start()
     {
+        Application.targetFrameRate = 60;
+        
+        Debug.Log("GameCompositionRoot initialized");
+        
         if (_sceneContext == null || _uiContext == null || _gameConfig == null || _gunContext == null)
         {
             Debug.LogError("Bootstrap contexts/config are not set");
             return;
         }
-
+        
         _compositionRoot = new GameCompositionRoot(_sceneContext, _uiContext, _gameConfig, _gunContext, this);
         _compositionRoot.Init();
+        Debug.Log(_compositionRoot == null ? "Bootstrap context not initialized" : "Bootstrap context initialized");
     }
 
     private void OnDestroy()

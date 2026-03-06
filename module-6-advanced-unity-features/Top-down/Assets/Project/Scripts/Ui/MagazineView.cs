@@ -1,10 +1,11 @@
-using System;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
 public class MagazineView : MonoBehaviour, IEventUser
 {
     [SerializeField] private TextMeshProUGUI _ammoText;
+    private readonly StringBuilder _textBuilder = new StringBuilder(32);
     private EventBus _eventBus;
     public void Subscribe(EventBus bus)
     {
@@ -16,7 +17,11 @@ public class MagazineView : MonoBehaviour, IEventUser
     {
         if (gameEvent is AmmoChangeEvent ammoChangeEvent)
         {
-            _ammoText.text = $"{ammoChangeEvent.CurrentMagazineSize}/{ammoChangeEvent.MaxMagazineSize}";
+            _textBuilder.Clear();
+            _textBuilder.Append(ammoChangeEvent.CurrentMagazineSize);
+            _textBuilder.Append('/');
+            _textBuilder.Append(ammoChangeEvent.MaxMagazineSize);
+            _ammoText.text = _textBuilder.ToString();
         }
     }
     public void Unsubscribe()
@@ -28,7 +33,7 @@ public class MagazineView : MonoBehaviour, IEventUser
     {
         if (_ammoText == null)
         {
-            Debug.LogError("MagazineView: _ammoTmp is null");
+            Debug.LogError("MagazineView: _ammoText is null",this);
         }
     }
 }

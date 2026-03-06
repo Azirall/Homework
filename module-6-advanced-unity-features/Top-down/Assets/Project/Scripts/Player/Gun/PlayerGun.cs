@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerGun : MonoBehaviour
 {
-    [SerializeField] private BulletSpawner _bulletSpawner;
+    [SerializeField] private BulletManager _bulletSpawner;
     private InputSystem _inputSystem;
     private GunLogic _gunLogic; 
     private EventBus _eventBus;
@@ -48,7 +48,7 @@ public class PlayerGun : MonoBehaviour
     {
         if (_bulletSpawner == null)
         {
-            Debug.LogError($"BulletSpawner in {name} is null!");
+            Debug.LogError($"BulletSpawner in is null!",this);
         }
     }
 }

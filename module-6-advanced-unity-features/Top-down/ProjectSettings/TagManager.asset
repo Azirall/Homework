@@ -9,14 +9,14 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Nav Mesh Ground
   - Water
   - UI
   - Player
-  - PlayerBullet
-  - EnemyBullet
-  - NavIgnore
-  - 
+  - Player Bullet
+  - Enemy Bullet
+  - Nav Ignore
+  - 'Interactive Physics '
   - 
   - 
   - 
