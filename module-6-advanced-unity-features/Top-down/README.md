@@ -24,3 +24,9 @@
 | Batches (Draw Calls) | 164 | 38 |
 | Triangles | 902.6k | 510.3k |
 | GC Alloc (per frame) | Частые скачки 80–256 B | Редкие пики 80 B |
+
+---
+
+## Данные профилировщика
+
+Данные профилировщика (снимки до и после оптимизации) находятся в папке **`Project/Profiler`** (`Assets/Project/Profiler`).
