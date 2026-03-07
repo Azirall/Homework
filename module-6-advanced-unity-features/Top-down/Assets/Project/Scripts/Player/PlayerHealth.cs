@@ -23,7 +23,7 @@ public class PlayerHealth : IDisposable
                 _currentHealth--;
                 _eventBus.RaiseGameEvent(new HealthChanged(_currentHealth, _maxHealth));
             }
-            else
+            if(_currentHealth <= 0)
             {
                 _eventBus.RaiseGameEvent(new EventTrigger(TriggerType.PlayerKilled));
             }

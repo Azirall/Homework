@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: 
   _playerSpeed: 4
-  _wavesCount: 1
+  _playerMaxHealth: 3
+  _wavesCount: 2
   _spawnDelay: 0.5
-  _enemiesInWave: 5
+  _enemiesInWave: 7

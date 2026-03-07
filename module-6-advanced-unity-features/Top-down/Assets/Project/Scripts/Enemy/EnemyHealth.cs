@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
@@ -15,7 +15,6 @@ public class EnemyHealth : MonoBehaviour
         if (collider.gameObject.CompareTag("PlayerBullet"))
         {
             _enemyKilled?.Invoke();
-            Destroy(gameObject);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class GunLogic
 { 
@@ -24,5 +24,10 @@ public class GunLogic
         
         _lastFireTime = Time.time;
         return true;
+    }
+
+    public void Reload()
+    {
+        _magazine.Reload();
     }
 }

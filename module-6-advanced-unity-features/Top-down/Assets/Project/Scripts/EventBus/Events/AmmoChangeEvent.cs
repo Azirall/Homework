@@ -1,4 +1,4 @@
-﻿public class AmmoChangeEvent : IGameEvent
+public class AmmoChangeEvent : IGameEvent
 {
     public int CurrentMagazineSize { get; private set; }
 
@@ -8,5 +8,11 @@
     {
         CurrentMagazineSize = currentMagazineSize;
         MaxMagazineSize = maxMagazineSize;
+    }
+
+    public void Set(int current, int max)
+    {
+        CurrentMagazineSize = current;
+        MaxMagazineSize = max;
     }
 }

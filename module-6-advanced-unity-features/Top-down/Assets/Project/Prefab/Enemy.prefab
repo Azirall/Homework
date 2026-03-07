@@ -199,5 +199,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mover: {fileID: 6999585747231671836}
-  _attackDistance: 2
+  _attackDistance: 3
   _attackDelay: 1
