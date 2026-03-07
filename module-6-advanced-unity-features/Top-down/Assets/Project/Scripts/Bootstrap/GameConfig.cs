@@ -4,7 +4,9 @@ public class GameConfig : ScriptableObject
 {
     [Header("Player")]
     [SerializeField] private float _playerSpeed = 5f;
+    [SerializeField] private int _playerMaxHealth = 10;
     public float PlayerSpeed => _playerSpeed;
+    public int PlayerMaxHealth => _playerMaxHealth;
 
     [Header("GameSettings")]
     [SerializeField] private int _wavesCount = 2;

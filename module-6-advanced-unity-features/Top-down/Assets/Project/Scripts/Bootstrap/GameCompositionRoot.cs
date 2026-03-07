@@ -51,7 +51,7 @@ public class GameCompositionRoot : IDisposable
         _uiInitializer = new UiInitializer(_uiContext, _gunContext, _eventBus);
         _uiInitializer.Init();
         
-        _playerHealth = new PlayerHealth(10, _eventBus);
+        _playerHealth = new PlayerHealth(_gameConfig.PlayerMaxHealth, _eventBus);
         _playerArsenal = new PlayerArsenal(_gunContext.GetConfigs(), _eventBus);
 
         _playerInitializer = new PlayerInitializer(inputSystem, playerController, playerGun, _gameConfig, _eventBus, _playerArsenal);

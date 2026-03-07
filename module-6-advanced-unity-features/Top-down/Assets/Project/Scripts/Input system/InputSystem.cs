@@ -7,6 +7,7 @@ public class InputSystem : MonoBehaviour
     public Vector2 MousePosition { get; private set; }
     
     public bool FireButtonPressed { get; private set; }
+    public bool ReloadButtonPressed { get; private set; }
     private EventBus _eventBus;
 
     public void Init(EventBus eventBus)
@@ -27,6 +28,11 @@ public class InputSystem : MonoBehaviour
     public void OnFire(InputValue value)
     {
         FireButtonPressed = value.isPressed;
+    }
+
+    public void OnReload(InputValue value)
+    {
+        ReloadButtonPressed = value.isPressed;
     }
 
     public void OnCancel(InputValue value)
@@ -53,7 +59,6 @@ public class InputSystem : MonoBehaviour
             }
         }
     }
-
     private void OnDestroy()
     {
         _eventBus = null;

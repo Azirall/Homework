@@ -35,6 +35,9 @@ public class PlayerGun : MonoBehaviour
 
     private void Update()
     {
+        if (_inputSystem.ReloadButtonPressed)
+            _gunLogic.Reload();
+
         if (!_inputSystem.FireButtonPressed) return;
         
         if (_gunLogic.TryShoot())

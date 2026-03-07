@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class WeaponMagazine
@@ -30,16 +30,16 @@ public class WeaponMagazine
 
     public void Reload()
     {
-        if(_currentMagazineSize < 0) return;
-        if(_reloadCoroutine != null) return;
-       _reloadCoroutine = _runner.StartCoroutine(StartReload());
+        if (_currentMagazineSize >= _maxMagazineSize) return; 
+        if (_reloadCoroutine != null) return;
+        _reloadCoroutine = _runner.StartCoroutine(StartReload());
     }
 
     private IEnumerator StartReload()
     {
         yield return new WaitForSeconds(_reloadTime);
         _currentMagazineSize = _maxMagazineSize;
-        _eventBus.RaiseGameEvent( new AmmoChangeEvent(_currentMagazineSize, _maxMagazineSize));
+        _eventBus.RaiseGameEvent(new AmmoChangeEvent(_currentMagazineSize, _maxMagazineSize));
         _reloadCoroutine = null;
     }
     
