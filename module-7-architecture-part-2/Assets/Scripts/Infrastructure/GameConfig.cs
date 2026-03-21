@@ -9,6 +9,10 @@ public class GameConfig : ScriptableObject
     [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
 
+    [Header("Player")]
+    [SerializeField] private int _playerHealth = 100;
+
     public InputSourceKind InputSource => _inputSource;
     public float MoveSpeed => _moveSpeed;
+    public int PlayerHealth => _playerHealth;
 }

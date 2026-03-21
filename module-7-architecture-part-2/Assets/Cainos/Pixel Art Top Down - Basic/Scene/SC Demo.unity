@@ -14858,7 +14858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerController: {fileID: 1012006894227905749}
   _rigidbody2D: {fileID: 1622224632}
-  _inputSourceKind: 0
+  _gameConfig: {fileID: 11400000, guid: 748cab5773edad043971bf441bf3b9d8, type: 2}
 --- !u!114 &763363389
 MonoBehaviour:
   m_ObjectHideFlags: 0

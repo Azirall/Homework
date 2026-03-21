@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: 
   _inputSource: 0
-  _moveSpeed: 5
+  _moveSpeed: 2
+  _playerHealth: 100

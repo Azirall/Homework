@@ -5,19 +5,24 @@ public class Bootstrap : MonoBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private GameConfig _gameConfig;
+    [SerializeField] private Transform[] _patrolPoints;
 
     private IInputService _inputService;
 
     private void Awake()
     {
+        var logger = new DebugLoggerService();
+        logger.GameStart();
         SetupInputService();
-        SetupPlayerController();
+        SetupPlayerController(logger);
     }
 
-    private void SetupPlayerController()
+    private void SetupPlayerController(ILoggerService logger)
     {
         var movementService = new Rigidbody2DMovementService(_rigidbody2D);
-        _playerController.Initialize(_inputService, movementService, _gameConfig);
+        var healthService = new HealthService(_gameConfig.PlayerHealth);
+        var coinWalletService = new CoinWalletService();
+        _playerController.Initialize(_inputService, movementService, _gameConfig, healthService, coinWalletService, logger);
     }
 
     private void SetupInputService()
@@ -27,9 +32,7 @@ public class Bootstrap : MonoBehaviour
             case InputSourceKind.Keyboard:
                 _inputService = new KeyboardInputService(new PlayerInputService());
                 break;
-            case InputSourceKind.AI:
-                break;
-            case InputSourceKind.Other:
+            case InputSourceKind.AIInputService:
                 break;
         }
     }
