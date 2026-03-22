@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class Bootstrap : MonoBehaviour
+public class GameInstaller : MonoBehaviour
 {
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private Rigidbody2D _rigidbody2D;
@@ -33,19 +34,23 @@ public class Bootstrap : MonoBehaviour
                 _inputService = new KeyboardInputService(new PlayerInputService());
                 break;
             case InputSourceKind.AIInputService:
+            {
+                Func<Vector2> getRigidbodyPosition = () => _rigidbody2D.position;
+                _inputService = new AiInputService(_patrolPoints, getRigidbodyPosition);
                 break;
+            }
         }
     }
 
     private void OnValidate()
     {
         if (_playerController == null)
-            Debug.LogError($"{nameof(Bootstrap)} requires {nameof(_playerController)} to be assigned.", this);
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_playerController)} to be assigned.", this);
 
         if (_rigidbody2D == null)
-            Debug.LogError($"{nameof(Bootstrap)} requires {nameof(_rigidbody2D)} to be assigned.", this);
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_rigidbody2D)} to be assigned.", this);
 
         if (_gameConfig == null)
-            Debug.LogError($"{nameof(Bootstrap)} requires {nameof(_gameConfig)} to be assigned.", this);
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_gameConfig)} to be assigned.", this);
     }
 }

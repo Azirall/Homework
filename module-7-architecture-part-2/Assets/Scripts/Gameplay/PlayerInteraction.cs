@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    private HealthService _healthService;
+    private IHealthService _healthService;
     private ICoinWalletService _coinWalletService;
     private ILoggerService _logger;
 
-    public void Initialize(HealthService healthService, ICoinWalletService coinWalletService, ILoggerService logger)
+    public void Initialize(IHealthService healthService, ICoinWalletService coinWalletService, ILoggerService logger)
     {
         _healthService = healthService;
         _coinWalletService = coinWalletService;

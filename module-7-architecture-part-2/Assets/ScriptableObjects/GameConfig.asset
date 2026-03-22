@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642c5116179b44c4fb1e7dff7e928937, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  _inputSource: 0
+  _inputSource: 1
   _moveSpeed: 2
   _playerHealth: 100

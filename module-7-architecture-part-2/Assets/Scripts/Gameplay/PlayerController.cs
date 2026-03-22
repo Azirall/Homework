@@ -8,10 +8,12 @@ public class PlayerController : MonoBehaviour
     private PlayerInteraction _playerInteraction;
     private IInputService _inputService;
     private GameConfig _gameConfig;
-    public void Initialize(IInputService inputService, IMovementService movementService, GameConfig gameConfig, HealthService healthService, ICoinWalletService coinWalletService, ILoggerService logger)
+    public void Initialize(IInputService inputService, IMovementService movementService, GameConfig gameConfig, 
+                           IHealthService healthService, ICoinWalletService coinWalletService, ILoggerService logger)
     {
         _inputService = inputService;
         _gameConfig = gameConfig;
+        
         _playerMovement.Initialize(movementService);
         _playerInteraction.Initialize(healthService, coinWalletService, logger);
     }
