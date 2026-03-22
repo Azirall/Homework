@@ -1,30 +1,47 @@
+using System;
+
 public class HealthService : IHealthService
 {
     private readonly int _maxHealth;
+    private readonly ILoggerService _logger;
     private int _currentHealth;
 
-    public HealthService(int initialHealth)
+    public event Action<int> HealthChanged;
+
+    public HealthService(int initialHealth, ILoggerService logger)
     {
         _maxHealth = initialHealth;
         _currentHealth = initialHealth;
+        _logger = logger;
     }
 
     public void GetDamage(int amount)
     {
-        _currentHealth -= amount;
-        if (_currentHealth < 0)
-            _currentHealth = 0;
+        _logger.DamageReceived(amount);
+        SetCurrentHealth(_currentHealth - amount);
     }
 
     public void GetHeal(int amount)
     {
-        _currentHealth += amount;
-        if (_currentHealth > _maxHealth)
-            _currentHealth = _maxHealth;
+        SetCurrentHealth(_currentHealth + amount);
     }
 
     public void Death()
     {
-        _currentHealth = 0;
+        SetCurrentHealth(0);
+    }
+
+    private void SetCurrentHealth(int value)
+    {
+        if (value < 0)
+            value = 0;
+        else if (value > _maxHealth)
+            value = _maxHealth;
+
+        if (_currentHealth == value)
+            return;
+
+        _currentHealth = value;
+        HealthChanged?.Invoke(_currentHealth);
     }
 }
