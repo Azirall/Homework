@@ -1,14 +1,6 @@
-public abstract class GameState
+public interface IGameState
 {
-    public virtual void Enter()
-    {
-    }
-
-    public virtual void Exit()
-    {
-    }
-
-    public virtual void Tick()
-    {
-    }
+    void Enter();
+    void Exit();
+    void Tick();
 }

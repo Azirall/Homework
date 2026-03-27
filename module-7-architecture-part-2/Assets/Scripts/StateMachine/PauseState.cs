@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class PauseState : GameState
+public class PauseState : IGameState
 {
     private readonly IPauseView _pauseView;
-    private readonly GameStateMachine _stateMachine;
+    private readonly GameController _gameController;
 
-    public PauseState(IPauseView pauseView, GameStateMachine stateMachine)
+    public PauseState(IPauseView pauseView, GameController gameController)
     {
         _pauseView = pauseView;
-        _stateMachine = stateMachine;
+        _gameController = gameController;
     }
 
-    public override void Enter()
+    public void Enter()
     {
         Time.timeScale = 0f;
         _pauseView.ResumeRequested += OnResumeRequested;
@@ -19,7 +19,7 @@ public class PauseState : GameState
         _pauseView.ShowPanel();
     }
 
-    public override void Exit()
+    public void Exit()
     {
         Time.timeScale = 1f;
         _pauseView.ResumeRequested -= OnResumeRequested;
@@ -27,13 +27,17 @@ public class PauseState : GameState
         _pauseView.HidePanel();
     }
 
+    public void Tick()
+    {
+    }
+
     private void OnResumeRequested()
     {
-        _stateMachine.ChangeState(typeof(GameplayState));
+        _gameController.ResumeGameplay();
     }
 
     private void OnToMenuRequested()
     {
-        _stateMachine.ChangeState(typeof(MainMenuState));
+        _gameController.OpenMainMenu();
     }
 }

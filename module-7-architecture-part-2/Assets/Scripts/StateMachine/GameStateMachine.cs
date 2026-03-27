@@ -3,12 +3,18 @@ using System.Collections.Generic;
 
 public class GameStateMachine
 {
-    private readonly Dictionary<Type, GameState> _states = new Dictionary<Type, GameState>();
-    private GameState _currentState;
+    private readonly Dictionary<Type, IGameState> _states = new Dictionary<Type, IGameState>();
+    private readonly ILoggerService _logger;
+    private IGameState _currentState;
 
-    public GameState CurrentState => _currentState;
+    public IGameState CurrentState => _currentState;
 
-    public void RegisterState(Type stateType, GameState state)
+    public GameStateMachine(ILoggerService logger)
+    {
+        _logger = logger;
+    }
+
+    public void RegisterState(Type stateType, IGameState state)
     {
         _states[stateType] = state;
     }
@@ -17,6 +23,10 @@ public class GameStateMachine
     {
         if (!_states.TryGetValue(newStateType, out var nextState))
             return;
+
+        var previousStateName = _currentState?.GetType().Name ?? "None";
+        var nextStateName = nextState.GetType().Name;
+        _logger.StateTransition(previousStateName, nextStateName);
 
         _currentState?.Exit();
         _currentState = nextState;

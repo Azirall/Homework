@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameInstaller : MonoBehaviour
@@ -6,46 +7,75 @@ public class GameInstaller : MonoBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private GameConfig _gameConfig;
+    [SerializeField] private GameObject _coinPickupPrefab;
+    [SerializeField] private CoinConfig _coinConfig;
+    [SerializeField] private List<BoxCollider2D> _spawnZones;
     [SerializeField] private Transform[] _patrolPoints;
 
     [Header("UI")]
     [SerializeField] private MainMenuView _mainMenuView;
     [SerializeField] private PauseView _pauseView;
-    [SerializeField] private MonoBehaviour _gameOverView;
-    [SerializeField] private MonoBehaviour _gameplayHud;
+    [SerializeField] private GameOverView _gameOverView;
+    [SerializeField] private GameplayHudView _gameplayHud;
 
     private IInputService _inputService;
     private GameStateMachine _stateMachine;
+    private GameController _gameController;
+    private ISpawnController _coinSpawnController;
 
     private void Awake()
     {
         var logger = new DebugLoggerService();
         logger.GameStart();
+        
         var healthService = new HealthService(_gameConfig.PlayerHealth, logger);
-        SetupStateMachine(healthService);
+        var coinWalletService = new CoinWalletService();
+
+        SetupCoinSpawn();
+        
+        SetupStateMachine(healthService, logger);
         SetupInputService();
-        SetupPlayerController(logger, healthService);
+        SetupPlayerController(logger, healthService, coinWalletService);
+        SetupGameplayHud(healthService, coinWalletService);
     }
 
     private void Start()
     {
-        _stateMachine.ChangeState(typeof(MainMenuState));
+        _gameController.StartGame();
     }
 
-    private void SetupStateMachine(IHealthService healthService)
+    private void Update()
     {
-        _stateMachine = new GameStateMachine();
-        _stateMachine.RegisterState(typeof(MainMenuState), new MainMenuState(_mainMenuView, _stateMachine));
-        _stateMachine.RegisterState(typeof(GameplayState), new GameplayState(healthService, _stateMachine, _pauseView));
-        _stateMachine.RegisterState(typeof(PauseState), new PauseState(_pauseView, _stateMachine));
-        _stateMachine.RegisterState(typeof(GameOverState), new GameOverState());
+        _gameController.Tick();
     }
 
-    private void SetupPlayerController(ILoggerService logger, IHealthService healthService)
+    private void SetupStateMachine(IHealthService healthService, ILoggerService logger)
+    {
+        _stateMachine = new GameStateMachine(logger);
+        _gameController = new GameController(_stateMachine);
+        _stateMachine.RegisterState(typeof(MainMenuState), new MainMenuState(_mainMenuView, _gameController));
+        _stateMachine.RegisterState(typeof(GameplayState), new GameplayState(healthService, _gameController, _pauseView, _coinSpawnController));
+        _stateMachine.RegisterState(typeof(PauseState), new PauseState(_pauseView, _gameController));
+        _stateMachine.RegisterState(typeof(GameOverState), new GameOverState((IGameOverView)_gameOverView));
+    }
+
+    private void SetupPlayerController(ILoggerService logger, IHealthService healthService, ICoinWalletService coinWalletService)
     {
         var movementService = new Rigidbody2DMovementService(_rigidbody2D);
-        var coinWalletService = new CoinWalletService();
         _playerController.Initialize(_inputService, movementService, _gameConfig, healthService, coinWalletService, logger);
+    }
+
+    private void SetupGameplayHud(IHealthService healthService, ICoinWalletService coinWalletService)
+    {
+        if (_gameplayHud == null)
+            return;
+
+        _gameplayHud.SetHealth(_gameConfig.PlayerHealth);
+        _gameplayHud.SetScore(coinWalletService.Balance);
+        _gameplayHud.SetCurrentInputMode(_gameConfig.InputSource);
+
+        healthService.HealthChanged += _gameplayHud.SetHealth;
+        coinWalletService.BalanceChanged += _gameplayHud.SetScore;
     }
 
     private void SetupInputService()
@@ -64,6 +94,15 @@ public class GameInstaller : MonoBehaviour
         }
     }
 
+    private void SetupCoinSpawn()
+    {
+        var poolFactory = new GameObjectPoolFactory();
+        _coinSpawnController = new SpawnController();
+
+        poolFactory.Init(_coinPickupPrefab, _coinConfig);
+        _coinSpawnController.Init(_spawnZones, poolFactory, _gameConfig.SpawnInterval);
+    }
+
     private void OnValidate()
     {
         if (_playerController == null)
@@ -75,18 +114,22 @@ public class GameInstaller : MonoBehaviour
         if (_gameConfig == null)
             Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_gameConfig)} to be assigned.", this);
 
+        if (_coinPickupPrefab == null)
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_coinPickupPrefab)} to be assigned.", this);
+
+        if (_coinConfig == null)
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_coinConfig)} to be assigned.", this);
+
+        if (_spawnZones == null)
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_spawnZones)} to be assigned.", this);
+
         if (_mainMenuView == null)
             Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_mainMenuView)} to be assigned.", this);
 
         if (_pauseView == null)
             Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_pauseView)} to be assigned.", this);
-        else if (_pauseView is not IPauseView)
-            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_pauseView)} to implement {nameof(IPauseView)}.", this);
 
-        if (_gameOverView != null && _gameOverView is not IGameOverView)
-            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_gameOverView)} to implement {nameof(IGameOverView)}.", this);
-
-        if (_gameplayHud != null && _gameplayHud is not IGameplayHud)
-            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_gameplayHud)} to implement {nameof(IGameplayHud)}.", this);
+        if (_gameOverView == null)
+            Debug.LogError($"{nameof(GameInstaller)} requires {nameof(_gameOverView)} to be assigned.", this);
     }
 }

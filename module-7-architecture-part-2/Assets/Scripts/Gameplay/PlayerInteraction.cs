@@ -19,7 +19,9 @@ public class PlayerInteraction : MonoBehaviour
         {
             _logger.CoinCollected(coin.Value);
             _coinWalletService.AddCoins(coin.Value);
-            Destroy(other.gameObject);
+
+            if (other.TryGetComponent(out IPoolItem poolItem))
+                poolItem.ReturnToPool();
         }
 
         if (_healthService == null)
@@ -27,13 +29,11 @@ public class PlayerInteraction : MonoBehaviour
 
         if (other.TryGetComponent(out IDamageDealer damageDealer))
         {
-            _logger.DamageReceived(damageDealer.Damage);
             _healthService.GetDamage(damageDealer.Damage);
         }
 
         if (other.TryGetComponent(out IHealDealer healDealer))
         {
-            _logger.HealReceived(healDealer.HealAmount);
             _healthService.GetHeal(healDealer.HealAmount);
             Destroy(other.gameObject);
         }

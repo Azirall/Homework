@@ -1,6 +1,6 @@
 public interface IGameplayHud
 {
-    int Health { get; set; }
-    int Score { get; set; }
-    InputSourceKind CurrentInputMode { get; set; }
+    void SetHealth(int health);
+    void SetScore(int score);
+    void SetCurrentInputMode(InputSourceKind inputSourceKind);
 }

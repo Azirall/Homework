@@ -1,32 +1,36 @@
 using UnityEngine;
 
-public class MainMenuState : GameState
+public class MainMenuState : IGameState
 {
     private readonly IMainMenuView _mainMenuView;
-    private readonly GameStateMachine _stateMachine;
+    private readonly GameController _gameController;
 
-    public MainMenuState(IMainMenuView mainMenuView, GameStateMachine stateMachine)
+    public MainMenuState(IMainMenuView mainMenuView, GameController gameController)
     {
         _mainMenuView = mainMenuView;
-        _stateMachine = stateMachine;
+        _gameController = gameController;
     }
 
-    public override void Enter()
+    public void Enter()
     {
         Time.timeScale = 0f;
         _mainMenuView.StartRequested += OnStartRequested;
         _mainMenuView.ShowPanel();
     }
 
-    public override void Exit()
+    public void Exit()
     {
         Time.timeScale = 1f;
         _mainMenuView.StartRequested -= OnStartRequested;
         _mainMenuView.HidePanel();
     }
 
+    public void Tick()
+    {
+    }
+
     private void OnStartRequested()
     {
-        _stateMachine.ChangeState(typeof(GameplayState));
+        _gameController.StartGameplay();
     }
 }

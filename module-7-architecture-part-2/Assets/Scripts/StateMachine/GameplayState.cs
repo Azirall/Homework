@@ -1,38 +1,43 @@
-using System;
-
-public class GameplayState : GameState
+public class GameplayState : IGameState
 {
     private readonly IHealthService _healthService;
-    private readonly GameStateMachine _stateMachine;
+    private readonly GameController _gameController;
     private readonly IPauseView _pauseView;
+    private readonly ISpawnController _spawnController;
 
-    public GameplayState(IHealthService healthService, GameStateMachine stateMachine, IPauseView pauseView)
+    public GameplayState(IHealthService healthService, GameController gameController, IPauseView pauseView, ISpawnController spawnController)
     {
         _healthService = healthService;
-        _stateMachine = stateMachine;
+        _gameController = gameController;
         _pauseView = pauseView;
+        _spawnController = spawnController;
     }
 
-    public override void Enter()
+    public void Enter()
     {
         _healthService.HealthChanged += OnHealthChanged;
         _pauseView.PauseRequested += OnPauseRequested;
     }
 
-    public override void Exit()
+    public void Exit()
     {
         _healthService.HealthChanged -= OnHealthChanged;
         _pauseView.PauseRequested -= OnPauseRequested;
     }
 
+    public void Tick()
+    {
+        _spawnController.Tick();
+    }
+
     private void OnPauseRequested()
     {
-        _stateMachine.ChangeState(typeof(PauseState));
+        _gameController.PauseGame();
     }
 
     private void OnHealthChanged(int currentHealth)
     {
         if (currentHealth == 0)
-            _stateMachine.ChangeState(typeof(GameOverState));
+            _gameController.OpenGameOver();
     }
 }

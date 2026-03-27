@@ -1,6 +1,7 @@
 public interface ILoggerService
 {
     void GameStart();
+    void StateTransition(string fromState, string toState);
     void InputSourceSwitched(InputSourceKind newSource);
     void ItemPickup();
     void DamageReceived(int amount);

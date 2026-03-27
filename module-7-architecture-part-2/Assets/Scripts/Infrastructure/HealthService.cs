@@ -23,6 +23,7 @@ public class HealthService : IHealthService
 
     public void GetHeal(int amount)
     {
+        _logger.HealReceived(amount);
         SetCurrentHealth(_currentHealth + amount);
     }
 

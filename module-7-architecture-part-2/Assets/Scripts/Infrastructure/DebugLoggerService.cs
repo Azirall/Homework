@@ -7,6 +7,11 @@ public class DebugLoggerService : ILoggerService
         Debug.Log("Game started");
     }
 
+    public void StateTransition(string fromState, string toState)
+    {
+        Debug.Log($"[GameStateMachine] Transition: {fromState} -> {toState}");
+    }
+
     public void InputSourceSwitched(InputSourceKind newSource)
     {
         Debug.Log($"Input source switched: {newSource}");

@@ -12,7 +12,11 @@ public class GameConfig : ScriptableObject
     [Header("Player")]
     [SerializeField] private int _playerHealth = 100;
 
+    [Header("Spawn")]
+    [SerializeField] private float _spawnInterval = 1f;
+
     public InputSourceKind InputSource => _inputSource;
     public float MoveSpeed => _moveSpeed;
     public int PlayerHealth => _playerHealth;
+    public float SpawnInterval => _spawnInterval;
 }
