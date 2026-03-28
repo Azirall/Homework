@@ -1,33 +1,50 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 public class GameplayState : IGameState
 {
     private readonly IHealthService _healthService;
     private readonly GameController _gameController;
     private readonly IPauseView _pauseView;
     private readonly ISpawnController _spawnController;
+    private readonly IReadOnlyList<IGameModifier> _modifiers;
 
-    public GameplayState(IHealthService healthService, GameController gameController, IPauseView pauseView, ISpawnController spawnController)
+    public GameplayState(IHealthService healthService, GameController gameController, IPauseView pauseView,
+                         ISpawnController spawnController, IReadOnlyList<IGameModifier> modifiers)
     {
         _healthService = healthService;
         _gameController = gameController;
         _pauseView = pauseView;
         _spawnController = spawnController;
+        _modifiers = modifiers;
     }
 
     public void Enter()
     {
         _healthService.HealthChanged += OnHealthChanged;
         _pauseView.PauseRequested += OnPauseRequested;
+
+        foreach (var modifier in _modifiers)
+            modifier.OnEnterGameplay();
     }
 
     public void Exit()
     {
         _healthService.HealthChanged -= OnHealthChanged;
         _pauseView.PauseRequested -= OnPauseRequested;
+
+        foreach (var modifier in _modifiers)
+            modifier.OnExitGameplay();
     }
 
     public void Tick()
     {
         _spawnController.Tick();
+
+        var deltaTime = Time.deltaTime;
+        foreach (var modifier in _modifiers)
+            modifier.Tick(deltaTime);
     }
 
     private void OnPauseRequested()

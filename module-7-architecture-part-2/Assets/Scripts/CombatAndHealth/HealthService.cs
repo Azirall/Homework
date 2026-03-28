@@ -21,6 +21,11 @@ public class HealthService : IHealthService
         SetCurrentHealth(_currentHealth - amount);
     }
 
+    public bool CanReceiveHeal()
+    {
+        return _currentHealth < _maxHealth;
+    }
+
     public void GetHeal(int amount)
     {
         _logger.HealReceived(amount);

@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class GameInstaller : MonoBehaviour
 {
+    [Header("Player")]
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private Rigidbody2D _rigidbody2D;
+
+    [Header("Game")]
     [SerializeField] private GameConfig _gameConfig;
+
+    [Header("Coin Spawning")]
     [SerializeField] private GameObject _coinPickupPrefab;
     [SerializeField] private CoinConfig _coinConfig;
     [SerializeField] private List<BoxCollider2D> _spawnZones;
+
+    [Header("AI Patrol")]
     [SerializeField] private Transform[] _patrolPoints;
+
+    [Header("Modifiers")]
+    [SerializeField] private List<GameModifierConfig> _gameModifiers = new List<GameModifierConfig>();
 
     [Header("UI")]
     [SerializeField] private MainMenuView _mainMenuView;
@@ -19,6 +29,7 @@ public class GameInstaller : MonoBehaviour
     [SerializeField] private GameplayHudView _gameplayHud;
 
     private IInputService _inputService;
+    private IMovementBlocker _movementBlocker;
     private GameStateMachine _stateMachine;
     private GameController _gameController;
     private ISpawnController _coinSpawnController;
@@ -32,9 +43,9 @@ public class GameInstaller : MonoBehaviour
         var coinWalletService = new CoinWalletService();
 
         SetupCoinSpawn();
-        
-        SetupStateMachine(healthService, logger);
+
         SetupInputService();
+        SetupStateMachine(healthService, logger);
         SetupPlayerController(logger, healthService, coinWalletService);
         SetupGameplayHud(healthService, coinWalletService);
     }
@@ -51,10 +62,13 @@ public class GameInstaller : MonoBehaviour
 
     private void SetupStateMachine(IHealthService healthService, ILoggerService logger)
     {
+        var modifierFactory = new GameModifierFactory(_gameModifiers, healthService, _movementBlocker);
+
         _stateMachine = new GameStateMachine(logger);
         _gameController = new GameController(_stateMachine);
         _stateMachine.RegisterState(typeof(MainMenuState), new MainMenuState(_mainMenuView, _gameController));
-        _stateMachine.RegisterState(typeof(GameplayState), new GameplayState(healthService, _gameController, _pauseView, _coinSpawnController));
+        _stateMachine.RegisterState(typeof(GameplayState),
+            new GameplayState(healthService, _gameController, _pauseView, _coinSpawnController, modifierFactory.Modifiers));
         _stateMachine.RegisterState(typeof(PauseState), new PauseState(_pauseView, _gameController));
         _stateMachine.RegisterState(typeof(GameOverState), new GameOverState((IGameOverView)_gameOverView));
     }
@@ -83,12 +97,18 @@ public class GameInstaller : MonoBehaviour
         switch (_gameConfig.InputSource)
         {
             case InputSourceKind.Keyboard:
-                _inputService = new KeyboardInputService(new PlayerInputService());
+            {
+                var keyboardInput = new MovementBlockingInputService(new KeyboardInputService(new PlayerInputService()));
+                _inputService = keyboardInput;
+                _movementBlocker = keyboardInput;
                 break;
+            }
             case InputSourceKind.AIInputService:
             {
-                Func<Vector2> getRigidbodyPosition = () => _rigidbody2D.position;
-                _inputService = new AiInputService(_patrolPoints, getRigidbodyPosition);
+                Vector2 GetRigidbodyPosition() => _rigidbody2D.position;
+                var aiInput = new MovementBlockingInputService(new AiInputService(_patrolPoints, GetRigidbodyPosition));
+                _inputService = aiInput;
+                _movementBlocker = aiInput;
                 break;
             }
         }
