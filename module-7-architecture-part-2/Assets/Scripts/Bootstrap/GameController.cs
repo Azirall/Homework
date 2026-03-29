@@ -1,5 +1,3 @@
-using System;
-
 public class GameController
 {
     private readonly GameStateMachine _stateMachine;

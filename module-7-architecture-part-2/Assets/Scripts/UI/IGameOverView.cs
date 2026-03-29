@@ -3,8 +3,10 @@ using System;
 public interface IGameOverView
 {
     event Action RestartRequested;
+    event Action ToMenuRequested;
 
-    void RestartToMenu();
+    void Restart();
+    void ToMenu();
     void ShowPanel();
     void HidePanel();
 }

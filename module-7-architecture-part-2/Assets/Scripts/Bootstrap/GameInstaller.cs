@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameInstaller : MonoBehaviour
 {
+    public static bool StartGameplayAfterSceneLoad { get; set; }
+
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private GameConfig _gameConfig;
@@ -41,7 +43,14 @@ public class GameInstaller : MonoBehaviour
 
     private void Start()
     {
-        _gameController.StartGame();
+        if (StartGameplayAfterSceneLoad)
+        {
+            StartGameplayAfterSceneLoad = false;
+            _mainMenuView.HidePanel();
+            _gameController.StartGameplay();
+        }
+        else
+            _gameController.StartGame();
     }
 
     private void Update()
