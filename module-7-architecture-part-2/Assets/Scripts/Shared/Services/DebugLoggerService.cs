@@ -46,4 +46,9 @@ public class DebugLoggerService : ILoggerService
     {
         Debug.Log("Game restart");
     }
+
+    public void GameModifierEnabled(string modifierName)
+    {
+        Debug.Log($"[GameModifier] {modifierName} enabled");
+    }
 }

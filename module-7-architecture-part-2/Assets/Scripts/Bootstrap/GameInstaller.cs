@@ -1,9 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameInstaller : MonoBehaviour
 {
+    public static bool StartGameplayAfterSceneLoad { get; set; }
+
     [Header("Player")]
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private Rigidbody2D _rigidbody2D;
@@ -34,6 +35,7 @@ public class GameInstaller : MonoBehaviour
     private GameStateMachine _stateMachine;
     private GameController _gameController;
     private ISpawnController _coinSpawnController;
+    private readonly ModifierHudLinesProvider _modifierHudLinesProvider = new ModifierHudLinesProvider();
     private void Awake()
     {
         var logger = new DebugLoggerService();
@@ -45,7 +47,7 @@ public class GameInstaller : MonoBehaviour
 
         SetupCoinSpawn();
 
-        SetupInputService();
+        SetupInputService(logger);
         SetupStateMachine(healthService, logger);
         SetupPlayerController(logger, _damageMultiplierService, coinWalletService);
         SetupGameplayHud(healthService, coinWalletService);
@@ -57,6 +59,7 @@ public class GameInstaller : MonoBehaviour
         {
             StartGameplayAfterSceneLoad = false;
             _mainMenuView.HidePanel();
+            _gameOverView.HidePanel();
             _gameController.StartGameplay();
         }
         else
@@ -70,7 +73,7 @@ public class GameInstaller : MonoBehaviour
 
     private void SetupStateMachine(IHealthService healthService, ILoggerService logger)
     {
-        var modifierFactory = new GameModifierFactory(_gameModifiers, healthService, _movementBlocker,_damageMultiplierService);
+        var modifierFactory = new GameModifierFactory(_gameModifiers, healthService, _movementBlocker, _damageMultiplierService, logger);
 
         _stateMachine = new GameStateMachine(logger);
         _gameController = new GameController(_stateMachine);
@@ -78,7 +81,7 @@ public class GameInstaller : MonoBehaviour
         _stateMachine.RegisterState(typeof(GameplayState),
             new GameplayState(healthService, _gameController, _pauseView, _coinSpawnController, modifierFactory.Modifiers));
         _stateMachine.RegisterState(typeof(PauseState), new PauseState(_pauseView, _gameController));
-        _stateMachine.RegisterState(typeof(GameOverState), new GameOverState(_gameOverView));
+        _stateMachine.RegisterState(typeof(GameOverState), new GameOverState(_gameOverView, logger));
     }
 
     private void SetupPlayerController(ILoggerService logger, IHealthService healthService, ICoinWalletService coinWalletService)
@@ -95,12 +98,13 @@ public class GameInstaller : MonoBehaviour
         _gameplayHud.SetHealth(_gameConfig.PlayerHealth);
         _gameplayHud.SetScore(coinWalletService.Balance);
         _gameplayHud.SetCurrentInputMode(_gameConfig.InputSource);
+        _gameplayHud.SetActiveModifierLines(_modifierHudLinesProvider.GetLines(_gameModifiers));
 
         healthService.HealthChanged += _gameplayHud.SetHealth;
         coinWalletService.BalanceChanged += _gameplayHud.SetScore;
     }
 
-    private void SetupInputService()
+    private void SetupInputService(ILoggerService logger)
     {
         switch (_gameConfig.InputSource)
         {
@@ -120,6 +124,8 @@ public class GameInstaller : MonoBehaviour
                 break;
             }
         }
+
+        logger.InputSourceSwitched(_gameConfig.InputSource);
     }
 
     private void SetupCoinSpawn()

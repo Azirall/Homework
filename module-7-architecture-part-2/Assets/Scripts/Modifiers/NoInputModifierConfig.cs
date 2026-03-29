@@ -8,4 +8,7 @@ public class NoInputModifierConfig : GameModifierConfig
 
     public float DisableDuration => _disableDuration;
     public float TimeBetweenReenables => _timeBetweenReenables;
+
+    protected override string BuildDefaultHudLine() =>
+        $"Input lock {DisableDuration}s/{TimeBetweenReenables}s";
 }

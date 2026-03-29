@@ -9,4 +9,5 @@ public interface ILoggerService
     void CoinCollected(int amount);
     void Death();
     void Restart();
+    void GameModifierEnabled(string modifierName);
 }

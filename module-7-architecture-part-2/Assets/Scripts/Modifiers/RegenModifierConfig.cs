@@ -8,4 +8,7 @@ public class RegenModifierConfig : GameModifierConfig
 
     public float TimeBetweenRegenTicks => _timeBetweenRegenTicks;
     public int RegenValue => _regenValue;
+
+    protected override string BuildDefaultHudLine() =>
+        $"Regen +{RegenValue}/{TimeBetweenRegenTicks}s";
 }

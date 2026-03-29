@@ -49,5 +49,8 @@ public class HealthService : IHealthService
 
         _currentHealth = value;
         HealthChanged?.Invoke(_currentHealth);
+
+        if (value == 0)
+            _logger.Death();
     }
 }

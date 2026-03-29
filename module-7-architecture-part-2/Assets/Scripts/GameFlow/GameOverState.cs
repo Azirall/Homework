@@ -4,10 +4,12 @@ using UnityEngine.SceneManagement;
 public class GameOverState : IGameState
 {
     private readonly IGameOverView _gameOverView;
+    private readonly ILoggerService _logger;
 
-    public GameOverState(IGameOverView gameOverView)
+    public GameOverState(IGameOverView gameOverView, ILoggerService logger)
     {
         _gameOverView = gameOverView;
+        _logger = logger;
     }
 
     public void Enter()
@@ -33,6 +35,7 @@ public class GameOverState : IGameState
     private void OnRestartRequested()
     {
         Time.timeScale = 1f;
+        _logger.Restart();
         GameInstaller.StartGameplayAfterSceneLoad = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

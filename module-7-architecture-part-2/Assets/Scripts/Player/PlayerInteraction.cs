@@ -17,6 +17,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_coinWalletService != null && other.TryGetComponent(out ICoin coin))
         {
+            _logger.ItemPickup();
             _logger.CoinCollected(coin.Value);
             _coinWalletService.AddCoins(coin.Value);
 
