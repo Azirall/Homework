@@ -53,7 +53,14 @@ public class GameInstaller : MonoBehaviour
 
     private void Start()
     {
-        _gameController.StartGame();
+        if (StartGameplayAfterSceneLoad)
+        {
+            StartGameplayAfterSceneLoad = false;
+            _mainMenuView.HidePanel();
+            _gameController.StartGameplay();
+        }
+        else
+            _gameController.StartGame();
     }
 
     private void Update()
