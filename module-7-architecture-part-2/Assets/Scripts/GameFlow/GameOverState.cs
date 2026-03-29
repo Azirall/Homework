@@ -14,6 +14,7 @@ public class GameOverState : IGameState
     {
         Time.timeScale = 0f;
         _gameOverView.RestartRequested += OnRestartRequested;
+        _gameOverView.ToMenuRequested += OnToMenuRequested;
         _gameOverView.ShowPanel();
     }
 
@@ -21,6 +22,7 @@ public class GameOverState : IGameState
     {
         Time.timeScale = 1f;
         _gameOverView.RestartRequested -= OnRestartRequested;
+        _gameOverView.ToMenuRequested -= OnToMenuRequested;
         _gameOverView.HidePanel();
     }
 
@@ -31,6 +33,14 @@ public class GameOverState : IGameState
     private void OnRestartRequested()
     {
         Time.timeScale = 1f;
+        GameInstaller.StartGameplayAfterSceneLoad = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void OnToMenuRequested()
+    {
+        Time.timeScale = 1f;
+        GameInstaller.StartGameplayAfterSceneLoad = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
