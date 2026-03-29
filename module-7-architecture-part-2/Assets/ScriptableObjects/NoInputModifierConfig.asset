@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: NoInputModifierConfig
   m_EditorClassIdentifier: 
   _disableDuration: 1
-  _timeBetweenReenables: 1
+  _timeBetweenReenables: 3

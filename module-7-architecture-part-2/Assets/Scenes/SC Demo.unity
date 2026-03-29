@@ -16635,6 +16635,10 @@ MonoBehaviour:
   - {fileID: 291577981}
   - {fileID: 774429071}
   - {fileID: 641677360}
+  _gameModifiers:
+  - {fileID: 11400000, guid: 2219f240cca053347b91962dc2a052ef, type: 2}
+  - {fileID: 11400000, guid: 6c77608969d99b44aa324b9bbde6d58b, type: 2}
+  - {fileID: 11400000, guid: 51bb8c3345de4de4295760ae59e2cd22, type: 2}
   _mainMenuView: {fileID: 999296560}
   _pauseView: {fileID: 999296563}
   _gameOverView: {fileID: 999296565}
@@ -18851,7 +18855,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.034, y: 0.27224368}
   m_AnchorMax: {x: 0.9724198, y: 0.7388782}
-  m_AnchoredPosition: {x: -0.2000122, y: 59.2}
+  m_AnchoredPosition: {x: -0.2000122, y: 59.19999}
   m_SizeDelta: {x: 5.26001, y: 0.33999634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &962782731
@@ -37507,7 +37511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2061420614
 RectTransform:
   m_ObjectHideFlags: 0

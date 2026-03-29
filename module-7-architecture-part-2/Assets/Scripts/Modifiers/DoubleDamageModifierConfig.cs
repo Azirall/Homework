@@ -1,9 +1,10 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DoubleDamageModifierConfig", menuName = "Game/Modifiers/Double Damage Config")]
+
 public class DoubleDamageModifierConfig : GameModifierConfig
 {
-    [SerializeField] private float _damageMultiplier = 2f;
+    [SerializeField] private int _damageMultiplier = 2;
 
-    public float DamageMultiplier => _damageMultiplier;
+    public int DamageMultiplier => _damageMultiplier;
 }

@@ -30,23 +30,24 @@ public class GameInstaller : MonoBehaviour
 
     private IInputService _inputService;
     private IMovementBlocker _movementBlocker;
+    private DamageMultiplierService _damageMultiplierService;
     private GameStateMachine _stateMachine;
     private GameController _gameController;
     private ISpawnController _coinSpawnController;
-
     private void Awake()
     {
         var logger = new DebugLoggerService();
         logger.GameStart();
         
         var healthService = new HealthService(_gameConfig.PlayerHealth, logger);
+        _damageMultiplierService = new DamageMultiplierService(healthService);
         var coinWalletService = new CoinWalletService();
 
         SetupCoinSpawn();
 
         SetupInputService();
         SetupStateMachine(healthService, logger);
-        SetupPlayerController(logger, healthService, coinWalletService);
+        SetupPlayerController(logger, _damageMultiplierService, coinWalletService);
         SetupGameplayHud(healthService, coinWalletService);
     }
 
@@ -62,7 +63,7 @@ public class GameInstaller : MonoBehaviour
 
     private void SetupStateMachine(IHealthService healthService, ILoggerService logger)
     {
-        var modifierFactory = new GameModifierFactory(_gameModifiers, healthService, _movementBlocker);
+        var modifierFactory = new GameModifierFactory(_gameModifiers, healthService, _movementBlocker,_damageMultiplierService);
 
         _stateMachine = new GameStateMachine(logger);
         _gameController = new GameController(_stateMachine);
@@ -70,7 +71,7 @@ public class GameInstaller : MonoBehaviour
         _stateMachine.RegisterState(typeof(GameplayState),
             new GameplayState(healthService, _gameController, _pauseView, _coinSpawnController, modifierFactory.Modifiers));
         _stateMachine.RegisterState(typeof(PauseState), new PauseState(_pauseView, _gameController));
-        _stateMachine.RegisterState(typeof(GameOverState), new GameOverState((IGameOverView)_gameOverView));
+        _stateMachine.RegisterState(typeof(GameOverState), new GameOverState(_gameOverView));
     }
 
     private void SetupPlayerController(ILoggerService logger, IHealthService healthService, ICoinWalletService coinWalletService)

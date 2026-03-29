@@ -1,20 +1,22 @@
 public class DoubleDamageModifier : IGameModifier
 {
     private readonly DoubleDamageModifierConfig _config;
-    private readonly IHealthService _healthService;
+    private readonly IDoubleDamageMultiplier _doubleDamageMultiplier;
 
-    public DoubleDamageModifier(DoubleDamageModifierConfig config, IHealthService healthService)
+    public DoubleDamageModifier(DoubleDamageModifierConfig config, IDoubleDamageMultiplier doubleDamageMultiplier)
     {
         _config = config;
-        _healthService = healthService;
+        _doubleDamageMultiplier = doubleDamageMultiplier;
     }
 
     public void OnEnterGameplay()
     {
+        _doubleDamageMultiplier.SetMultiplier(_config.DamageMultiplier);
     }
 
     public void OnExitGameplay()
     {
+        _doubleDamageMultiplier.SetMultiplier(1);
     }
 
     public void Tick(float deltaTime)

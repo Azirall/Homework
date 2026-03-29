@@ -6,13 +6,16 @@ public class GameModifierFactory
     private readonly List<GameModifierConfig> _configs;
     private readonly IHealthService _healthService;
     private readonly IMovementBlocker _movementBlocker;
+    private readonly IDoubleDamageMultiplier _doubleDamageMultiplier;
     private readonly List<IGameModifier> _modifiers;
-
-    public GameModifierFactory(List<GameModifierConfig> configs, IHealthService healthService, IMovementBlocker movementBlocker)
+    
+    public GameModifierFactory(List<GameModifierConfig> configs, IHealthService healthService, IMovementBlocker movementBlocker, IDoubleDamageMultiplier damageMultiplier)
     {
-        _configs = configs ?? new List<GameModifierConfig>();
+        _configs = configs;
         _healthService = healthService;
         _movementBlocker = movementBlocker;
+        _doubleDamageMultiplier = damageMultiplier;
+        
         _modifiers = new List<IGameModifier>();
 
         foreach (var config in _configs)
@@ -26,7 +29,7 @@ public class GameModifierFactory
                     _modifiers.Add(new RegenModifier(regenConfig, _healthService));
                     break;
                 case DoubleDamageModifierConfig doubleDamageConfig:
-                    _modifiers.Add(new DoubleDamageModifier(doubleDamageConfig, _healthService));
+                    _modifiers.Add(new DoubleDamageModifier(doubleDamageConfig, _doubleDamageMultiplier));
                     break;
                 case NoInputModifierConfig noInputConfig:
                     _modifiers.Add(new NoInputModifier(noInputConfig, _movementBlocker));
